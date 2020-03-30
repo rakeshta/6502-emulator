@@ -15,6 +15,8 @@ namespace rt_6502_emulator {
 
     /// The 6502 CPU
     class CPU {
+
+    // internal state  -------------------------------------------------------------------------------------------------
     private:
 
         /// Status flags on the 6502 status register
@@ -29,7 +31,6 @@ namespace rt_6502_emulator {
             STATUS_FLAG_NEGATIVE          = (1 << 7),
         };
 
-    private:
         byte   _regA;           // accumulator
         byte   _regX;           // x register
         byte   _regY;           // y register
@@ -39,7 +40,11 @@ namespace rt_6502_emulator {
 
         byte   _extraCycles;    // tracks remaining clock cycles in an active operation
 
+
+    // public methods  -------------------------------------------------------------------------------------------------
     public:
+
+        /// Constructs and resets an instance of the 6502 CPU emulator.
         CPU();
         ~CPU();
 
@@ -55,6 +60,8 @@ namespace rt_6502_emulator {
         /// Performs one clocks worth of operations.
         void clock();
 
+
+    // bus access ------------------------------------------------------------------------------------------------------
     protected:
 
         /// Convenience function to read a byte from the given address on the bus.
@@ -83,6 +90,59 @@ namespace rt_6502_emulator {
         ///
         /// @note The word is read in little endian format
         word readNextWord();
+
+
+    // addressing modes ------------------------------------------------------------------------------------------------
+    private:
+
+	    /// Implied - The source / destination of the operand is implied in the instruction itself.
+	    void _addressing_IMP();
+
+	    /// Accumulator - The operand is implicitly defined as the accumulator.
+	    void _addressing_ACC();
+
+	    /// Immediate - A single byte operand follows the inscturtion in the next position in memory.
+	    void _addressing_IMM();
+
+	    /// Zero Page - A single byte address offset follows the instruction. The page (MSB) of the address
+	    /// is always 0x00.
+	    void _addressing_ZPG();
+
+	    /// Zero Page, X - Similar to the zero page addressing but with the target address calculated by
+	    /// adding the `X` register value to the address.
+	    void _addressing_ZPX();
+
+	    /// Zero Page, Y - Similar to the zero page addressing but with the target address calculated by
+	    /// adding the `Y` register value to the address.
+	    void _addressing_ZPY();
+
+	    /// Relative - A single byte address offset follows the instruction. The page (MSB) of the address
+	    /// is obtained from the program counter.
+	    void _addressing_REL();
+
+	    /// Absolute - A two byte address follows the instruction. The first byte is the LSB (bits 0 to 7)
+	    /// and the second byte is the MSB (bits 8 to 15).
+	    void _addressing_ABS();
+
+	    /// Absolute, X - Similar to absolute addressing but with the target address calculated by adding
+	    /// the `X` register value to the address in the instruction.
+	    void _addressing_ABX();
+
+	    /// Absolute, Y - Similar to absolute addressing but with the target address calculated by adding
+	    /// the `Y` register value to the address in the instruction
+	    void _addressing_ABY();
+
+	    /// Indirect - A two byte address follows the instruction that points to the location where the
+	    /// LSB of the target address is located.
+	    void _addressing_IND();
+
+	    /// Indexed Indirect - A single byte zero page address offset follows the instruction. This is added
+	    /// to the `X` register value to get the location where the LSB of the target address is found.
+	    void _addressing_IZX();
+
+	    /// Indirect Indexed - A single byte zero page address offset follows the instruction. This points
+	    /// to the LSB of the target address which is then offset using the value of the `X` register.
+	    void _addressing_IZY();
     };
 }
 

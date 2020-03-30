@@ -61,4 +61,46 @@ namespace rt_6502_emulator {
         byte msb = read(_pc++);
         return (msb << 8) | lsb;
     }
+
+
+    // addressing modes ------------------------------------------------------------------------------------------------
+
+	void CPU::_addressing_IMP() {
+	}
+
+	void CPU::_addressing_ACC() {
+	}
+
+	void CPU::_addressing_IMM() {
+	}
+
+	void CPU::_addressing_ZPG() {
+	}
+
+	void CPU::_addressing_ZPX() {
+	}
+
+	void CPU::_addressing_ZPY() {
+	}
+
+	void CPU::_addressing_REL() {
+	}
+
+	void CPU::_addressing_ABS() {
+	}
+
+	void CPU::_addressing_ABX() {
+	}
+
+	void CPU::_addressing_ABY() {
+	}
+
+	void CPU::_addressing_IND() {
+	}
+
+	void CPU::_addressing_IZX() {
+	}
+
+	void CPU::_addressing_IZY() {
+	}
 }
