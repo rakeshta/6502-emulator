@@ -96,53 +96,53 @@ namespace rt_6502_emulator {
     private:
 
 	    /// Implied - The source / destination of the operand is implied in the instruction itself.
-	    void _addressing_IMP();
+	    void _addr_IMP();
 
 	    /// Accumulator - The operand is implicitly defined as the accumulator.
-	    void _addressing_ACC();
+	    void _addr_ACC();
 
 	    /// Immediate - A single byte operand follows the inscturtion in the next position in memory.
-	    void _addressing_IMM();
+	    void _addr_IMM();
 
 	    /// Zero Page - A single byte address offset follows the instruction. The page (MSB) of the address
 	    /// is always 0x00.
-	    void _addressing_ZPG();
+	    void _addr_ZPG();
 
 	    /// Zero Page, X - Similar to the zero page addressing but with the target address calculated by
 	    /// adding the `X` register value to the address.
-	    void _addressing_ZPX();
+	    void _addr_ZPX();
 
 	    /// Zero Page, Y - Similar to the zero page addressing but with the target address calculated by
 	    /// adding the `Y` register value to the address.
-	    void _addressing_ZPY();
+	    void _addr_ZPY();
 
 	    /// Relative - A single byte address offset follows the instruction. The page (MSB) of the address
 	    /// is obtained from the program counter.
-	    void _addressing_REL();
+	    void _addr_REL();
 
 	    /// Absolute - A two byte address follows the instruction. The first byte is the LSB (bits 0 to 7)
 	    /// and the second byte is the MSB (bits 8 to 15).
-	    void _addressing_ABS();
+	    void _addr_ABS();
 
 	    /// Absolute, X - Similar to absolute addressing but with the target address calculated by adding
 	    /// the `X` register value to the address in the instruction.
-	    void _addressing_ABX();
+	    void _addr_ABX();
 
 	    /// Absolute, Y - Similar to absolute addressing but with the target address calculated by adding
 	    /// the `Y` register value to the address in the instruction
-	    void _addressing_ABY();
+	    void _addr_ABY();
 
 	    /// Indirect - A two byte address follows the instruction that points to the location where the
 	    /// LSB of the target address is located.
-	    void _addressing_IND();
+	    void _addr_IND();
 
 	    /// Indexed Indirect - A single byte zero page address offset follows the instruction. This is added
 	    /// to the `X` register value to get the location where the LSB of the target address is found.
-	    void _addressing_IZX();
+	    void _addr_IZX();
 
 	    /// Indirect Indexed - A single byte zero page address offset follows the instruction. This points
 	    /// to the LSB of the target address which is then offset using the value of the `X` register.
-	    void _addressing_IZY();
+	    void _addr_IZY();
 
 
     // instructions ----------------------------------------------------------------------------------------------------
@@ -377,6 +377,23 @@ namespace rt_6502_emulator {
 
 		/// Transfer Y to accumulator
 		void _instr_TYA();
+
+
+    // operations ------------------------------------------------------------------------------------------------------
+    private:
+
+        struct Operation {
+            char   code[4];
+            void  (CPU::*instruction)();
+            void  (CPU::*addressing)();
+            byte   cycles;
+        };
+
+        struct Operation _operations[1] = {
+            {"BRK", &CPU::_instr_BRK, &CPU::_addr_IMM, 7},
+        };
+
+
     };
 }
 

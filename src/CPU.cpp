@@ -65,43 +65,43 @@ namespace rt_6502_emulator {
 
     // addressing modes ------------------------------------------------------------------------------------------------
 
-	void CPU::_addressing_IMP() {
+	void CPU::_addr_IMP() {
 	}
 
-	void CPU::_addressing_ACC() {
+	void CPU::_addr_ACC() {
 	}
 
-	void CPU::_addressing_IMM() {
+	void CPU::_addr_IMM() {
 	}
 
-	void CPU::_addressing_ZPG() {
+	void CPU::_addr_ZPG() {
 	}
 
-	void CPU::_addressing_ZPX() {
+	void CPU::_addr_ZPX() {
 	}
 
-	void CPU::_addressing_ZPY() {
+	void CPU::_addr_ZPY() {
 	}
 
-	void CPU::_addressing_REL() {
+	void CPU::_addr_REL() {
 	}
 
-	void CPU::_addressing_ABS() {
+	void CPU::_addr_ABS() {
 	}
 
-	void CPU::_addressing_ABX() {
+	void CPU::_addr_ABX() {
 	}
 
-	void CPU::_addressing_ABY() {
+	void CPU::_addr_ABY() {
 	}
 
-	void CPU::_addressing_IND() {
+	void CPU::_addr_IND() {
 	}
 
-	void CPU::_addressing_IZX() {
+	void CPU::_addr_IZX() {
 	}
 
-	void CPU::_addressing_IZY() {
+	void CPU::_addr_IZY() {
 	}
 
 
