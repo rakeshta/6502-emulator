@@ -6,18 +6,17 @@
         {
             "type": "shell",
             "label": "prepare",
-            "command": "mkdir -p ${workspaceFolder}/build",
+            "command": "mkdir -p ${workspaceFolder}/build"
         },
         {
             "type": "shell",
-            "label": "clang++ build",
-            "command": "/usr/bin/clang++",
+            "label": "build",
             "dependsOn": "prepare",
+            "command": "/usr/bin/clang++",
             "args": [
                 "-std=c++17",
                 "-stdlib=libc++",
                 "-g",
-                // "${file}",
                 "${workspaceFolder}/src/*.cpp",
                 "-o",
                 "${workspaceFolder}/build/main"
