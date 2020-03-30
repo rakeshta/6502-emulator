@@ -143,6 +143,240 @@ namespace rt_6502_emulator {
 	    /// Indirect Indexed - A single byte zero page address offset follows the instruction. This points
 	    /// to the LSB of the target address which is then offset using the value of the `X` register.
 	    void _addressing_IZY();
+
+
+    // instructions ----------------------------------------------------------------------------------------------------
+    private:
+
+        /* Instructions for Illegal Op Codes */
+
+	    /// Halts the CPU
+	    void _instr_KIL();
+
+	    /// TBD - Illegal op code
+	    void _instr_SLO();
+
+	    /// TBD - Illegal op code
+	    void _instr_RLA();
+
+	    /// TBD - Illegal op code
+	    void _instr_SRE();
+
+	    /// TBD - Illegal op code
+	    void _instr_RRA();
+
+	    /// TBD - Illegal op code
+	    void _instr_SAX();
+
+	    /// TBD - Illegal op code
+	    void _instr_LAX();
+
+	    /// TBD - Illegal op code
+	    void _instr_DCP();
+
+	    /// TBD - Illegal op code
+	    void _instr_ISC();
+
+	    /// TBD - Illegal op code
+	    void _instr_ANC();
+
+	    /// TBD - Illegal op code
+	    void _instr_ALR();
+
+	    /// TBD - Illegal op code
+	    void _instr_ARR();
+
+	    /// TBD - Illegal op code
+	    void _instr_XAA();
+
+	    /// TBD - Illegal op code
+	    void _instr_AXS();
+
+	    /// TBD - Illegal op code
+	    void _instr_AHX();
+
+	    /// TBD - Illegal op code
+	    void _instr_SHY();
+
+	    /// TBD - Illegal op code
+	    void _instr_SHX();
+
+	    /// TBD - Illegal op code
+	    void _instr_TAS();
+
+	    /// TBD - Illegal op code
+	    void _instr_LAS();
+
+
+	    /* Instructions for Legal Op codes  */
+
+	    /// Add with carry
+		void _instr_ADC();
+
+		/// And (with accumulator)
+		void _instr_AND();
+
+		/// Arithmetic shift left
+		void _instr_ASL();
+
+		/// Branch on carry clear
+		void _instr_BCC();
+
+		/// Branch on carry set
+		void _instr_BCS();
+
+		/// Branch on equal (zero set)
+		void _instr_BEQ();
+
+		/// Bit test
+		void _instr_BIT();
+
+		/// Branch on minus (negative set)
+		void _instr_BMI();
+
+		/// Branch on not equal (zero clear)
+		void _instr_BNE();
+
+		/// Branch on plus (negative clear)
+		void _instr_BPL();
+
+		/// Break / interrupt
+		void _instr_BRK();
+
+		/// Branch on overflow clear
+		void _instr_BVC();
+
+		/// Branch on overflow set
+		void _instr_BVS();
+
+		/// Clear carry
+		void _instr_CLC();
+
+		/// Clear decimal
+		void _instr_CLD();
+
+		/// Clear interrupt disable
+		void _instr_CLI();
+
+		/// Clear overflow
+		void _instr_CLV();
+
+		/// Compare (with accumulator)
+		void _instr_CMP();
+
+		/// Compare with X
+		void _instr_CPX();
+
+		/// Compare with Y
+		void _instr_CPY();
+
+		/// Decrement
+		void _instr_DEC();
+
+		/// Decrement X
+		void _instr_DEX();
+
+		/// Decrement Y
+		void _instr_DEY();
+
+		/// Exclusive or (with accumulator)
+		void _instr_EOR();
+
+		/// Increment
+		void _instr_INC();
+
+		/// Increment X
+		void _instr_INX();
+
+		/// Increment Y
+		void _instr_INY();
+
+		/// Jump
+		void _instr_JMP();
+
+		/// Jump subroutine
+		void _instr_JSR();
+
+		/// Load accumulator
+		void _instr_LDA();
+
+		/// Load X
+		void _instr_LDX();
+
+		/// Load Y
+		void _instr_LDY();
+
+		/// Logical shift right
+		void _instr_LSR();
+
+		/// No operation
+		void _instr_NOP();
+
+		/// Or with accumulator
+		void _instr_ORA();
+
+		/// Push accumulator
+		void _instr_PHA();
+
+		/// Push processor status (SR)
+		void _instr_PHP();
+
+		/// Pull accumulator
+		void _instr_PLA();
+
+		/// Pull processor status (SR)
+		void _instr_PLP();
+
+		/// Rotate left
+		void _instr_ROL();
+
+		/// Rotate right
+		void _instr_ROR();
+
+		/// Return from interrupt
+		void _instr_RTI();
+
+		/// Return from subroutine
+		void _instr_RTS();
+
+		/// Subtract with carry
+		void _instr_SBC();
+
+		/// Set carry
+		void _instr_SEC();
+
+		/// Set decimal
+		void _instr_SED();
+
+		/// Set interrupt disable
+		void _instr_SEI();
+
+		/// Store accumulator
+		void _instr_STA();
+
+		/// Store X
+		void _instr_STX();
+
+		/// Store Y
+		void _instr_STY();
+
+		/// Transfer accumulator to X
+		void _instr_TAX();
+
+		/// Transfer accumulator to Y
+		void _instr_TAY();
+
+		/// Transfer stack pointer to X
+		void _instr_TSX();
+
+		/// Transfer X to accumulator
+		void _instr_TXA();
+
+		/// Transfer X to stack pointer
+		void _instr_TXS();
+
+		/// Transfer Y to accumulator
+		void _instr_TYA();
     };
 }
 
