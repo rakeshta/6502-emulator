@@ -22,6 +22,20 @@ namespace rt_6502_emulator {
     }
 
 
+    // accessors -------------------------------------------------------------------------------------------------------
+
+    byte CPU::getAccumulator()    { return _regA; }
+    byte CPU::getRegisterX()      { return _regX; }
+    byte CPU::getRegisterY()      { return _regY; }
+    byte CPU::getStackPointer()   { return _stackP; }
+    byte CPU::getStatus()         { return _status; }
+    word CPU::getProgramCounter() { return _pc; }
+
+    bool CPU::isOperationComplete() {
+        return _opCycles == 0;
+    }
+
+
     // public methods --------------------------------------------------------------------------------------------------
 
     void CPU::reset() {

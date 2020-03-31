@@ -16,6 +16,22 @@ namespace rt_6502_emulator {
     /// The 6502 CPU
     class CPU {
 
+	// status flags ----------------------------------------------------------------------------------------------------
+	public:
+
+        /// Status flags on the status register
+        enum STATUS_FLAG {
+            STATUS_FLAG_CARRY             = (1 << 0),
+            STATUS_FLAG_ZERO              = (1 << 1),
+            STATUS_FLAG_DISABLEINTERRUPTS = (1 << 2),
+            STATUS_FLAG_DECIMAL           = (1 << 3),
+            STATUS_FLAG_BREAK             = (1 << 4),
+            STATUS_FLAG_UNUSED            = (1 << 5),
+            STATUS_FLAG_OVERFLOW          = (1 << 6),
+            STATUS_FLAG_NEGATIVE          = (1 << 7),
+        };
+
+
     // internal state  -------------------------------------------------------------------------------------------------
     private:
 
@@ -30,6 +46,32 @@ namespace rt_6502_emulator {
 
         bool   _opTargetAcc;    // set to true by the addressing mode if the target is the accumulator
         word   _opAddress;      // target address computed by the addressing mode of the active operation
+
+
+	// accessors -------------------------------------------------------------------------------------------------------
+	public:
+
+		/// Gets the current value in the accumulator
+		byte getAccumulator();
+
+		/// Gets the current value in the x (index) register
+		byte getRegisterX();
+
+		/// Gets the current value in the y (index) register
+		byte getRegisterY();
+
+		/// Gets the current value in the stack pointer
+		byte getStackPointer();
+
+		/// Gets the current value in the status register
+		byte getStatus();
+
+		/// Gets the current address in the program counter
+		word getProgramCounter();
+
+		/// Gets whether the current operation has completed executing.
+		/// This is useful for debugging & single stepping through the program.
+		bool isOperationComplete();
 
 
     // public methods  -------------------------------------------------------------------------------------------------
@@ -53,19 +95,7 @@ namespace rt_6502_emulator {
 
 
 	// status register helpers -----------------------------------------------------------------------------------------
-	public:
-
-        /// Status flags
-        enum STATUS_FLAG {
-            STATUS_FLAG_CARRY             = (1 << 0),
-            STATUS_FLAG_ZERO              = (1 << 1),
-            STATUS_FLAG_DISABLEINTERRUPTS = (1 << 2),
-            STATUS_FLAG_DECIMAL           = (1 << 3),
-            STATUS_FLAG_BREAK             = (1 << 4),
-            STATUS_FLAG_UNUSED            = (1 << 5),
-            STATUS_FLAG_OVERFLOW          = (1 << 6),
-            STATUS_FLAG_NEGATIVE          = (1 << 7),
-        };
+	private:
 
 		bool _getStatusFlag(STATUS_FLAG bit);
 		void _setStatusFlag(STATUS_FLAG bit, bool value);
