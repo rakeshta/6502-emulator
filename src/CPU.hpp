@@ -28,6 +28,9 @@ namespace rt_6502_emulator {
 
         byte   _opCycles;       // tracks remaining clock cycles in an active operation
 
+        bool   _opTargetAcc;    // set to true by the addressing mode if the target is the accumulator
+        word   _opAddress;      // target address computed by the addressing mode of the active operation
+
 
     // public methods  -------------------------------------------------------------------------------------------------
     public:
@@ -69,26 +72,26 @@ namespace rt_6502_emulator {
 
 
     // bus access ------------------------------------------------------------------------------------------------------
-    protected:
+    private:
 
         /// Convenience function to read a byte from the given address on the bus.
         ///
         /// @param address the address to read from
         ///
         /// @return a byte of data read from the given address
-        byte read(word address);
+        byte _read(word address);
 
         /// Convenience function to write a byte to the given address on the bus.
         ///
         /// @param address the address to write to
         /// @param data    the data byte to write
-        void write(word address, byte data);
+        void _write(word address, byte data);
 
         /// Convenience function to read a byte from the address pointed to by the program counter and increment the
         /// program counter.
         ///
         /// @return a byte read from the address pointed to by the program counter
-        byte readNextByte();
+        byte _readNextByte();
 
         /// Convenience function to read the next two bytes from the address pointed to by the program counter and
         /// increment the program counter by 2.
@@ -96,11 +99,13 @@ namespace rt_6502_emulator {
         /// @return a word read from the next two bytes
         ///
         /// @note The word is read in little endian format
-        word readNextWord();
+        word _readNextWord();
 
 
     // addressing modes ------------------------------------------------------------------------------------------------
     private:
+
+        byte _fetch();
 
 	    /// Implied - The source / destination of the operand is implied in the instruction itself.
 	    void _addr_IMP();

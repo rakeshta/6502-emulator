@@ -34,9 +34,13 @@ namespace rt_6502_emulator {
         _status      = STATUS_FLAG_UNUSED;
 
         // read program start address from 0xFFFC to initialize the program counter
-        word lsb     = read(0xFFFC);
-        word msb     = read(0xFFFD);
+        word lsb     = _read(0xFFFC);
+        word msb     = _read(0xFFFD);
         _pc          = (msb << 8) | lsb;
+
+        // reset current op addressing
+        _opTargetAcc = false;
+        _opAddress   = 0x0000;
 
         // reset takes 8 clock cycles
         _opCycles    = 8;
@@ -48,7 +52,7 @@ namespace rt_6502_emulator {
         if (_opCycles == 0) {
 
             // read next operation
-            byte opcode = readNextByte();
+            byte opcode = _readNextByte();
             CPU::Operation op = _operations[opcode];
 
             // set the number of cycles required for the op
@@ -87,43 +91,61 @@ namespace rt_6502_emulator {
 
     // bus access convenience methods ----------------------------------------------------------------------------------
 
-    byte CPU::read(word address) {
+    byte CPU::_read(word address) {
         return 0x00;
     }
 
-    void CPU::write(word address, byte data) {
+    void CPU::_write(word address, byte data) {
         // no op
     }
 
-    byte CPU::readNextByte() {
-        return read(_pc++);
+    byte CPU::_readNextByte() {
+        return _read(_pc++);
     }
 
-    word CPU::readNextWord() {
-        byte lsb = read(_pc++);
-        byte msb = read(_pc++);
+    word CPU::_readNextWord() {
+        byte lsb = _read(_pc++);
+        byte msb = _read(_pc++);
         return (msb << 8) | lsb;
     }
 
 
     // addressing modes ------------------------------------------------------------------------------------------------
 
+    byte CPU::_fetch() {
+        return _opTargetAcc
+            ? _regA
+            : _read(_opAddress);
+    }
+
 	void CPU::_addr_IMP() {
+        _opTargetAcc = false;
+        _opAddress   = 0x00;
 	}
 
 	void CPU::_addr_ACC() {
+        _opTargetAcc = true;
+        _opAddress   = 0x0000;
 	}
 
 	void CPU::_addr_IMM() {
+        _opTargetAcc = false;
+        _opAddress   = ++_pc;
 	}
 
 	void CPU::_addr_ZPG() {
+        _opTargetAcc = false;
+        _opAddress   = _readNextByte();
 	}
 
 	void CPU::_addr_ZPX() {
+        _opTargetAcc = false;
+        _opAddress   = 0x00FF & (_readNextByte() + _regX);
 	}
 
 	void CPU::_addr_ZPY() {
+        _opTargetAcc = false;
+        _opAddress   = 0x00FF & (_readNextByte() + _regY);
 	}
 
 	void CPU::_addr_REL() {
