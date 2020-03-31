@@ -39,7 +39,46 @@ namespace rt_6502_emulator {
         _pc          = (msb << 8) | lsb;
 
         // reset takes 8 clock cycles
-        _extraCycles = 8;
+        _opCycles    = 8;
+    }
+
+    void CPU::tick() {
+
+        // execute next instruction if the clock ticks required for the previous instruction have elapsed.
+        if (_opCycles == 0) {
+
+            // read next operation
+            byte opcode = readNextByte();
+            CPU::Operation op = _operations[opcode];
+
+            // set the number of cycles required for the op
+            _opCycles = op.cycles;
+
+            // execute op
+            // (*op.addr)();
+            // op.inst();
+        }
+
+        // decrement cycles for operation
+        if (_opCycles > 0) {
+            _opCycles--;
+        }
+    }
+
+
+    // status register helpers -----------------------------------------------------------------------------------------
+
+    bool CPU::_getStatusFlag(STATUS_FLAG bit) {
+        return (_status & bit) > 0 ? true : false;
+    }
+
+    void CPU::_setStatusFlag(STATUS_FLAG bit, bool value) {
+        if (value) {
+            _status |= bit;
+        }
+        else {
+            _status &= ~bit;
+        }
     }
 
 
@@ -343,7 +382,7 @@ namespace rt_6502_emulator {
     // operations ------------------------------------------------------------------------------------------------------
 
     #define CPU_OP(code, inst, addr, cycles) \
-        _operations[code] = (Operation){code, #inst, &CPU::_inst_##inst, &CPU::_addr_##addr, cycles}
+        _operations[code] = (CPU::Operation){code, #inst, &CPU::_inst_##inst, &CPU::_addr_##addr, cycles}
 
     void CPU::_initOperations() {
 		CPU_OP(0x00, BRK, IMP, 7);

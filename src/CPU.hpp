@@ -19,18 +19,6 @@ namespace rt_6502_emulator {
     // internal state  -------------------------------------------------------------------------------------------------
     private:
 
-        /// Status flags on the 6502 status register
-        enum STATUS_FLAG {
-            STATUS_FLAG_CARRY             = (1 << 0),
-            STATUS_FLAG_ZERO              = (1 << 1),
-            STATUS_FLAG_DISABLEINTERRUPTS = (1 << 2),
-            STATUS_FLAG_DECIMAL           = (1 << 3),
-            STATUS_FLAG_BREAK             = (1 << 4),
-            STATUS_FLAG_UNUSED            = (1 << 5),
-            STATUS_FLAG_OVERFLOW          = (1 << 6),
-            STATUS_FLAG_NEGATIVE          = (1 << 7),
-        };
-
         byte   _regA;           // accumulator
         byte   _regX;           // x register
         byte   _regY;           // y register
@@ -38,7 +26,7 @@ namespace rt_6502_emulator {
         byte   _status;         // status register
         word   _pc;             // program counter
 
-        byte   _extraCycles;    // tracks remaining clock cycles in an active operation
+        byte   _opCycles;       // tracks remaining clock cycles in an active operation
 
 
     // public methods  -------------------------------------------------------------------------------------------------
@@ -58,7 +46,26 @@ namespace rt_6502_emulator {
         void reset();
 
         /// Performs one clocks worth of operations.
-        void clock();
+        void tick();
+
+
+	// status register helpers -----------------------------------------------------------------------------------------
+	public:
+
+        /// Status flags
+        enum STATUS_FLAG {
+            STATUS_FLAG_CARRY             = (1 << 0),
+            STATUS_FLAG_ZERO              = (1 << 1),
+            STATUS_FLAG_DISABLEINTERRUPTS = (1 << 2),
+            STATUS_FLAG_DECIMAL           = (1 << 3),
+            STATUS_FLAG_BREAK             = (1 << 4),
+            STATUS_FLAG_UNUSED            = (1 << 5),
+            STATUS_FLAG_OVERFLOW          = (1 << 6),
+            STATUS_FLAG_NEGATIVE          = (1 << 7),
+        };
+
+		bool _getStatusFlag(STATUS_FLAG bit);
+		void _setStatusFlag(STATUS_FLAG bit, bool value);
 
 
     // bus access ------------------------------------------------------------------------------------------------------
