@@ -14,7 +14,7 @@
             "dependsOn": "prepare",
             "command": "/usr/bin/clang++",
             "args": [
-                "-std=c++20",
+                "-std=c++17",
                 "-Wc++11-extensions",
                 "-stdlib=libc++",
                 "-g",
