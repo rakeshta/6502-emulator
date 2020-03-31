@@ -54,9 +54,12 @@ namespace rt_6502_emulator {
             // set the number of cycles required for the op
             _opCycles = op.cycles;
 
-            // execute op
-            // (*op.addr)();
-            // op.inst();
+            // execute the operation
+            (this->*op.addr)();
+            (this->*op.inst)();
+
+            // ensure unused flag is always set in the status register
+            _setStatusFlag(STATUS_FLAG_UNUSED, true);
         }
 
         // decrement cycles for operation
