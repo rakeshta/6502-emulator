@@ -151,249 +151,248 @@ namespace rt_6502_emulator {
         /* Instructions for Illegal Op Codes */
 
 	    /// Halts the CPU
-	    void _instr_KIL();
+	    void _inst_KIL();
 
 	    /// TBD - Illegal op code
-	    void _instr_SLO();
+	    void _inst_SLO();
 
 	    /// TBD - Illegal op code
-	    void _instr_RLA();
+	    void _inst_RLA();
 
 	    /// TBD - Illegal op code
-	    void _instr_SRE();
+	    void _inst_SRE();
 
 	    /// TBD - Illegal op code
-	    void _instr_RRA();
+	    void _inst_RRA();
 
 	    /// TBD - Illegal op code
-	    void _instr_SAX();
+	    void _inst_SAX();
 
 	    /// TBD - Illegal op code
-	    void _instr_LAX();
+	    void _inst_LAX();
 
 	    /// TBD - Illegal op code
-	    void _instr_DCP();
+	    void _inst_DCP();
 
 	    /// TBD - Illegal op code
-	    void _instr_ISC();
+	    void _inst_ISC();
 
 	    /// TBD - Illegal op code
-	    void _instr_ANC();
+	    void _inst_ANC();
 
 	    /// TBD - Illegal op code
-	    void _instr_ALR();
+	    void _inst_ALR();
 
 	    /// TBD - Illegal op code
-	    void _instr_ARR();
+	    void _inst_ARR();
 
 	    /// TBD - Illegal op code
-	    void _instr_XAA();
+	    void _inst_XAA();
 
 	    /// TBD - Illegal op code
-	    void _instr_AXS();
+	    void _inst_AXS();
 
 	    /// TBD - Illegal op code
-	    void _instr_AHX();
+	    void _inst_AHX();
 
 	    /// TBD - Illegal op code
-	    void _instr_SHY();
+	    void _inst_SHY();
 
 	    /// TBD - Illegal op code
-	    void _instr_SHX();
+	    void _inst_SHX();
 
 	    /// TBD - Illegal op code
-	    void _instr_TAS();
+	    void _inst_TAS();
 
 	    /// TBD - Illegal op code
-	    void _instr_LAS();
+	    void _inst_LAS();
 
 
 	    /* Instructions for Legal Op codes  */
 
 	    /// Add with carry
-		void _instr_ADC();
+		void _inst_ADC();
 
 		/// And (with accumulator)
-		void _instr_AND();
+		void _inst_AND();
 
 		/// Arithmetic shift left
-		void _instr_ASL();
+		void _inst_ASL();
 
 		/// Branch on carry clear
-		void _instr_BCC();
+		void _inst_BCC();
 
 		/// Branch on carry set
-		void _instr_BCS();
+		void _inst_BCS();
 
 		/// Branch on equal (zero set)
-		void _instr_BEQ();
+		void _inst_BEQ();
 
 		/// Bit test
-		void _instr_BIT();
+		void _inst_BIT();
 
 		/// Branch on minus (negative set)
-		void _instr_BMI();
+		void _inst_BMI();
 
 		/// Branch on not equal (zero clear)
-		void _instr_BNE();
+		void _inst_BNE();
 
 		/// Branch on plus (negative clear)
-		void _instr_BPL();
+		void _inst_BPL();
 
 		/// Break / interrupt
-		void _instr_BRK();
+		void _inst_BRK();
 
 		/// Branch on overflow clear
-		void _instr_BVC();
+		void _inst_BVC();
 
 		/// Branch on overflow set
-		void _instr_BVS();
+		void _inst_BVS();
 
 		/// Clear carry
-		void _instr_CLC();
+		void _inst_CLC();
 
 		/// Clear decimal
-		void _instr_CLD();
+		void _inst_CLD();
 
 		/// Clear interrupt disable
-		void _instr_CLI();
+		void _inst_CLI();
 
 		/// Clear overflow
-		void _instr_CLV();
+		void _inst_CLV();
 
 		/// Compare (with accumulator)
-		void _instr_CMP();
+		void _inst_CMP();
 
 		/// Compare with X
-		void _instr_CPX();
+		void _inst_CPX();
 
 		/// Compare with Y
-		void _instr_CPY();
+		void _inst_CPY();
 
 		/// Decrement
-		void _instr_DEC();
+		void _inst_DEC();
 
 		/// Decrement X
-		void _instr_DEX();
+		void _inst_DEX();
 
 		/// Decrement Y
-		void _instr_DEY();
+		void _inst_DEY();
 
 		/// Exclusive or (with accumulator)
-		void _instr_EOR();
+		void _inst_EOR();
 
 		/// Increment
-		void _instr_INC();
+		void _inst_INC();
 
 		/// Increment X
-		void _instr_INX();
+		void _inst_INX();
 
 		/// Increment Y
-		void _instr_INY();
+		void _inst_INY();
 
 		/// Jump
-		void _instr_JMP();
+		void _inst_JMP();
 
 		/// Jump subroutine
-		void _instr_JSR();
+		void _inst_JSR();
 
 		/// Load accumulator
-		void _instr_LDA();
+		void _inst_LDA();
 
 		/// Load X
-		void _instr_LDX();
+		void _inst_LDX();
 
 		/// Load Y
-		void _instr_LDY();
+		void _inst_LDY();
 
 		/// Logical shift right
-		void _instr_LSR();
+		void _inst_LSR();
 
 		/// No operation
-		void _instr_NOP();
+		void _inst_NOP();
 
 		/// Or with accumulator
-		void _instr_ORA();
+		void _inst_ORA();
 
 		/// Push accumulator
-		void _instr_PHA();
+		void _inst_PHA();
 
 		/// Push processor status (SR)
-		void _instr_PHP();
+		void _inst_PHP();
 
 		/// Pull accumulator
-		void _instr_PLA();
+		void _inst_PLA();
 
 		/// Pull processor status (SR)
-		void _instr_PLP();
+		void _inst_PLP();
 
 		/// Rotate left
-		void _instr_ROL();
+		void _inst_ROL();
 
 		/// Rotate right
-		void _instr_ROR();
+		void _inst_ROR();
 
 		/// Return from interrupt
-		void _instr_RTI();
+		void _inst_RTI();
 
 		/// Return from subroutine
-		void _instr_RTS();
+		void _inst_RTS();
 
 		/// Subtract with carry
-		void _instr_SBC();
+		void _inst_SBC();
 
 		/// Set carry
-		void _instr_SEC();
+		void _inst_SEC();
 
 		/// Set decimal
-		void _instr_SED();
+		void _inst_SED();
 
 		/// Set interrupt disable
-		void _instr_SEI();
+		void _inst_SEI();
 
 		/// Store accumulator
-		void _instr_STA();
+		void _inst_STA();
 
 		/// Store X
-		void _instr_STX();
+		void _inst_STX();
 
 		/// Store Y
-		void _instr_STY();
+		void _inst_STY();
 
 		/// Transfer accumulator to X
-		void _instr_TAX();
+		void _inst_TAX();
 
 		/// Transfer accumulator to Y
-		void _instr_TAY();
+		void _inst_TAY();
 
 		/// Transfer stack pointer to X
-		void _instr_TSX();
+		void _inst_TSX();
 
 		/// Transfer X to accumulator
-		void _instr_TXA();
+		void _inst_TXA();
 
 		/// Transfer X to stack pointer
-		void _instr_TXS();
+		void _inst_TXS();
 
 		/// Transfer Y to accumulator
-		void _instr_TYA();
+		void _inst_TYA();
 
 
     // operations ------------------------------------------------------------------------------------------------------
     private:
 
-        struct Operation {
-            char   code[4];
-            void  (CPU::*instruction)();
-            void  (CPU::*addressing)();
+        typedef struct _Operation {
+			byte   code;
+            char   abbr[4];
+            void  (CPU::*inst)();
+            void  (CPU::*addr)();
             byte   cycles;
-        };
+        } Operation;
 
-        struct Operation _operations[1] = {
-            {"BRK", &CPU::_instr_BRK, &CPU::_addr_IMM, 7},
-        };
+        Operation _operations[256];
 
-
+		void _initOperations();
     };
 }
 
