@@ -6,8 +6,8 @@
 //  Copyright (c) 2020 Rakesh Ayyaswami. All rights reserved.
 //
 
-#ifndef __RT_6502_EMULATOR_TYPES_H__
-#define __RT_6502_EMULATOR_TYPES_H__
+#ifndef __RT_6502_EMULATOR_TYPES_HPP__
+#define __RT_6502_EMULATOR_TYPES_HPP__
 
 namespace rt_6502_emulator {
 
@@ -15,4 +15,4 @@ namespace rt_6502_emulator {
     typedef __UINT16_TYPE__  word;
 }
 
-#endif // __RT_6502_EMULATOR_TYPES_H__
+#endif // __RT_6502_EMULATOR_TYPES_HPP__

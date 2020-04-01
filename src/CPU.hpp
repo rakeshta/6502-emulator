@@ -6,8 +6,8 @@
 //  Copyright (c) 2020 Rakesh Ayyaswami. All rights reserved.
 //
 
-#ifndef __RT_6502_EMULATOR_CPU_H__
-#define __RT_6502_EMULATOR_CPU_H__
+#ifndef __RT_6502_EMULATOR_CPU_HPP__
+#define __RT_6502_EMULATOR_CPU_HPP__
 
 #include "types.hpp"
 
@@ -438,4 +438,4 @@ namespace rt_6502_emulator {
     };
 }
 
-#endif // __RT_6502_EMULATOR_CPU_H__
+#endif // __RT_6502_EMULATOR_CPU_HPP__
