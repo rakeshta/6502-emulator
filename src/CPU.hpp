@@ -32,22 +32,6 @@ namespace rt_6502_emulator {
         };
 
 
-    // internal state  -------------------------------------------------------------------------------------------------
-    private:
-
-        byte   _regA;           // accumulator
-        byte   _regX;           // x register
-        byte   _regY;           // y register
-        byte   _stackP;         // stack pointer
-        byte   _status;         // status register
-        word   _pc;             // program counter
-
-        byte   _opCycles;       // tracks remaining clock cycles in an active operation
-
-        bool   _opTargetAcc;    // set to true by the addressing mode if the target is the accumulator
-        word   _opAddress;      // target address computed by the addressing mode of the active operation
-
-
 	// accessors -------------------------------------------------------------------------------------------------------
 	public:
 
@@ -92,6 +76,22 @@ namespace rt_6502_emulator {
 
         /// Performs one clocks worth of operations.
         void tick();
+
+
+    // internal state  -------------------------------------------------------------------------------------------------
+    private:
+
+        byte   _regA;           // accumulator
+        byte   _regX;           // x register
+        byte   _regY;           // y register
+        byte   _stackP;         // stack pointer
+        byte   _status;         // status register
+        word   _pc;             // program counter
+
+        byte   _opCycles;       // tracks remaining clock cycles in an active operation
+
+        bool   _opTargetAcc;    // set to true by the addressing mode if the target is the accumulator
+        word   _opAddress;      // target address computed by the addressing mode of the active operation
 
 
 	// status register helpers -----------------------------------------------------------------------------------------
