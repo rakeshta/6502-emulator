@@ -143,7 +143,7 @@ namespace rt_6502_emulator {
 	    /// Accumulator - The operand is implicitly defined as the accumulator.
 	    void _addr_ACC();
 
-	    /// Immediate - A single byte operand follows the inscturtion in the next position in memory.
+	    /// Immediate - A single byte operand follows the instruction in the next position in memory.
 	    void _addr_IMM();
 
 	    /// Zero Page - A single byte address offset follows the instruction. The page (MSB) of the address

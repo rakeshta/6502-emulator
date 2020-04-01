@@ -10,17 +10,17 @@
         },
         {
             "type": "shell",
-            "label": "build",
+            "label": "build test",
             "dependsOn": "prepare",
             "command": "/usr/bin/clang++",
             "args": [
                 "-std=c++17",
-                "-Wc++11-extensions",
                 "-stdlib=libc++",
                 "-g",
-                "${workspaceFolder}/src/*.cpp",
+                "${workspaceFolder}/src/**/*.cpp",
+                "${workspaceFolder}/test/**/*.cpp",
                 "-o",
-                "${workspaceFolder}/build/main"
+                "${workspaceFolder}/build/test"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
