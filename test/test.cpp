@@ -6,19 +6,10 @@
 //  Copyright (c) 2020 Rakesh Ayyaswami. All rights reserved.
 //
 
-#include <iostream>
-#include "../src/CPU.hpp"
+#include "TestMacros.hpp"
 
-using namespace std;
-using namespace rt_6502_emulator;
 
 int main() {
-
-    CPU cpu;
-    cpu.reset();
-
-    cout << "Testing harness" << endl;
-    cout << "Acc: " << cpu.getAccumulator() << endl;
-
+    RunTestSuite(TestMemory);
     return 0;
 }
