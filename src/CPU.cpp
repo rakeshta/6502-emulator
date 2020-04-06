@@ -198,6 +198,13 @@ namespace rt_6502_emulator {
 	}
 
 	void CPU::_addr_IND() {
+		word address  = _readNextWord();
+		byte lsb      = _read(address);
+		// HARDWARE BUG: If address is last byte of page, adding 1 wraps around to first address of page instead of
+		// crossing page boundary.
+		// SEE: JMP bug at http://nesdev.com/6502bugs.txt
+		byte msb      = (address & 0x00FF) == 0x00FF ? _read(address & 0xFF00) : _read(address + 1);
+		_opAddress    = (msb << 8) | lsb;
 	}
 
 	void CPU::_addr_IZX() {

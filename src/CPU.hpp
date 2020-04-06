@@ -14,6 +14,12 @@
 namespace rt_6502_emulator {
 
     /// The 6502 CPU
+	///
+	/// References:
+	/// - https://www.masswerk.at/6502/6502_instruction_set.html
+	/// - http://www.oxyron.de/html/opcodes02.html
+	/// - http://archive.6502.org/datasheets/mos_6501-6505_mpu_preliminary_aug_1975.pdf
+	/// - http://nesdev.com/6502bugs.txt
     class CPU {
 
 	// status flags ----------------------------------------------------------------------------------------------------
