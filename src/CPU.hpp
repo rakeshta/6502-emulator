@@ -13,7 +13,7 @@
 
 namespace rt_6502_emulator {
 
-    /// The 6502 CPU
+    /// The 6502 CPU.
 	///
 	/// References:
 	/// - https://www.masswerk.at/6502/6502_instruction_set.html
