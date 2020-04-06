@@ -133,36 +133,48 @@ namespace rt_6502_emulator {
     }
 
 	void CPU::_addr_IMP() {
-        _opTargetAcc = false;
-        _opAddress   = 0x00;
+        _opTargetAcc  = false;
+        _opAddress    = 0x00;
 	}
 
 	void CPU::_addr_ACC() {
-        _opTargetAcc = true;
-        _opAddress   = 0x0000;
+        _opTargetAcc  = true;
+        _opAddress    = 0x0000;
 	}
 
 	void CPU::_addr_IMM() {
-        _opTargetAcc = false;
-        _opAddress   = ++_pc;
+        _opTargetAcc  = false;
+        _opAddress    = ++_pc;
 	}
 
 	void CPU::_addr_ZPG() {
-        _opTargetAcc = false;
-        _opAddress   = _readNextByte();
+        _opTargetAcc  = false;
+        _opAddress    = _readNextByte();
 	}
 
 	void CPU::_addr_ZPX() {
-        _opTargetAcc = false;
-        _opAddress   = 0x00FF & (_readNextByte() + _regX);
+        _opTargetAcc  = false;
+        _opAddress    = 0x00FF & (_readNextByte() + _regX);
 	}
 
 	void CPU::_addr_ZPY() {
-        _opTargetAcc = false;
-        _opAddress   = 0x00FF & (_readNextByte() + _regY);
+        _opTargetAcc  = false;
+        _opAddress    = 0x00FF & (_readNextByte() + _regY);
 	}
 
 	void CPU::_addr_REL() {
+		_opTargetAcc  = false;
+
+		// get relative offset. can be negative with 2's complement format
+		word rel      = _readNextByte();
+		if (rel & 0x80) {
+			rel |= 0xFF00; // negative relative address
+		}
+
+		// final address is offset from program counter
+		// mark page overflow if not in same page as program counter
+		_opAddress    = _pc + rel;
+		_opPageChange = (0xFF00 & _pc) != (0xFF00 & _opAddress);
 	}
 
 	void CPU::_addr_ABS() {

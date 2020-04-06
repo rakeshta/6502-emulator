@@ -92,6 +92,7 @@ namespace rt_6502_emulator {
 
         bool   _opTargetAcc;    // set to true by the addressing mode if the target is the accumulator
         word   _opAddress;      // target address computed by the addressing mode of the active operation
+		bool   _opPageChange;   // set to true if the addressing mode causes a page boundary to be crossed
 
 
 	// status register helpers -----------------------------------------------------------------------------------------
