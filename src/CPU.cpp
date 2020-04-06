@@ -208,6 +208,10 @@ namespace rt_6502_emulator {
 	}
 
 	void CPU::_addr_IZX() {
+		word address  = _readNextByte() + _regX;
+		byte lsb      = _read(address & 0x00FF);
+		byte msb      = _read((address + 1) & 0x00FF);
+		_opAddress    = (msb << 8) | lsb;
 	}
 
     void CPU::_addr_IZY() {
