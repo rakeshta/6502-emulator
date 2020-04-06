@@ -59,6 +59,20 @@ namespace rt_6502_emulator {
     word Memory::addressStart() { return _addressStart; }
     word Memory::addressEnd()   { return _addressEnd; }
 
+
+    // load ------------------------------------------------------------------------------------------------------------
+
+    bool Memory::load(byte *buffer, word address, word length) {
+        assert(address >= _addressStart && address <= _addressEnd);
+        assert((__UINT32_TYPE__)address + (__UINT32_TYPE__)length <= (__UINT32_TYPE__)_addressEnd);
+        word offset = address - _addressStart;
+        memcpy(_contents + offset, buffer, length);
+        return true;
+    }
+
+
+    // read / write ----------------------------------------------------------------------------------------------------
+
     bool Memory::read(word address, byte &data) {
         if (address >= _addressStart && address <= _addressEnd) {
             word offset = address - _addressStart;

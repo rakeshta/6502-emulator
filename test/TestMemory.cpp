@@ -6,6 +6,7 @@
 //  Copyright (c) 2020 Rakesh Ayyaswami. All rights reserved.
 //
 
+#include <stdlib.h>
 #include "TestMacros.hpp"
 #include "../src/Memory.hpp"
 
@@ -63,10 +64,34 @@ TestCase(address_range, "Address Range", {
     TestAssert(_memory->read (0xFFFF, data) == false, "Read outside range should return `false`");
 })
 
+TestCase(load, "Load", {
+
+    // initialize data to load
+    byte buffer[0xFF];
+    for (word i = 0x00; i < 0xFF; i++) {
+        buffer[i] = 0xFF - i;
+    }
+
+    // load data
+    word startAddr = 0x0F;
+    bool success = _memory->load(buffer, startAddr, 0xFF);
+    TestAssert(success, "Load data failed");
+
+    // verify written data
+    for (word i = 0x00; i < 0xFF; i++) {
+        byte data;
+        word addr = startAddr + i;
+        bool success = _memory->read(addr, data);
+        TestAssert(success == true, "Reading from address 0x%04X failed", addr);
+        TestAssert(data == buffer[i], "Incorrect data read from address 0x%04X", addr);
+    }
+})
+
 
 // test suite ----------------------------------------------------------------------------------------------------------
 
 TestSuite(TestMemory, {
     test_read_write();
     test_address_range();
+    test_load();
 });

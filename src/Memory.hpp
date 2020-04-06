@@ -18,7 +18,7 @@ namespace rt_6502_emulator {
     class Memory: public Addressable {
     public:
 
-        /// Constructs a RAM or ROM memory module with the tiven address range.
+        /// Constructs a RAM or ROM memory module with the given address range.
         ///
         /// @param isWritable   initializes as a ROM module if `true` or as RAM otherwise
         /// @param addressStart start range of address at which to map the memory
@@ -43,6 +43,17 @@ namespace rt_6502_emulator {
 
         /// End range of the memory address space.
         virtual word addressEnd();
+
+
+        /// Copies the given data into the memory address space.
+        ///
+        /// @param buffer  the source data to copy
+        /// @param address the destination address
+        /// @param length  number of bytes to copy
+        ///
+        /// @returns `true` if data copied successfully
+        bool load(byte *buffer, word address, word length);
+
 
         /// Read a byte from the memory address space.
         ///
