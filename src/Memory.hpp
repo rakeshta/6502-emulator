@@ -10,12 +10,12 @@
 #define __RT_6502_EMULATOR_MEMORY_HPP__
 
 #include "types.hpp"
-#include "IAddressable.hpp"
+#include "Addressable.hpp"
 
 namespace rt_6502_emulator {
 
     // Memory peripheral that can be attached to the bus to be used either as RAM or ROM.
-    class Memory: public IAddressable {
+    class Memory: public Addressable {
     public:
 
         /// Constructs a RAM or ROM memory module with the tiven address range.
@@ -47,9 +47,10 @@ namespace rt_6502_emulator {
         /// Read a byte from the memory address space.
         ///
         /// @param address the address from which to read
+        /// @param data    reference to a data byte variable
         ///
-        /// @returns a byte read from the peripheral
-        virtual byte read(word address);
+        /// @returns `true` if address was read from
+        virtual bool read(word address, byte &data);
 
         /// Write a byte to the memory address space.
         ///
@@ -57,7 +58,7 @@ namespace rt_6502_emulator {
         ///
         /// @param address the address to which to write
         /// @param data    the data byte to write
-        virtual void write(word address, byte data);
+        virtual bool write(word address, byte data);
 
     private:
 

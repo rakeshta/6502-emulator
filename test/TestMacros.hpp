@@ -20,6 +20,12 @@
         block \
     }
 
+#define TestSetUp(block) \
+    void _setup_() block
+
+#define TestTearDown(block) \
+    void _teardown_() block \
+
 #define TestCase(name, label, block) \
     bool __block__test__##name() { \
         block \
@@ -27,7 +33,9 @@
     } \
     void test_##name() { \
         printf("[START] %s\n", label); \
+        _setup_(); \
         bool pass = __block__test__##name(); \
+        _teardown_(); \
         if (pass) { \
             printf("[ PASS] %s\n", label); \
         } \

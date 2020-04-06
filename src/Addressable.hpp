@@ -1,20 +1,20 @@
 //
-//  IAddressable.hpp
+//  Addressable.hpp
 //  6502-emulator
 //
 //  Created by Rakesh Ayyaswami on 01 Apr 2020.
 //  Copyright (c) 2020 Pixxa LLC. All rights reserved.
 //
 
-#ifndef __RT_6502_EMULATOR_I_ADDRESSABLE_HPP__
-#define __RT_6502_EMULATOR_I_ADDRESSABLE_HPP__
+#ifndef __RT_6502_EMULATOR_ADDRESSABLE_HPP__
+#define __RT_6502_EMULATOR_ADDRESSABLE_HPP__
 
 #include "types.hpp"
 
 namespace rt_6502_emulator {
 
     /// Abstract class to be implemented by peripherals attached to the bus.
-    class IAddressable {
+    class Addressable {
     public:
 
         /// Returns `true` if this peripheral can be read from.
@@ -32,16 +32,19 @@ namespace rt_6502_emulator {
         /// Read a byte from the peripherals address space.
         ///
         /// @param address the address from which to read
+        /// @param data    reference to a data byte variable
         ///
-        /// @returns a byte read from the peripheral
-        virtual byte read(word address) = 0;
+        /// @returns `true` if address was read from
+        virtual bool read(word address, byte &data) = 0;
 
         /// Write a byte to the peripherals address space.
         ///
         /// @param address the address to which to write
         /// @param data    the data byte to write
-        virtual void write(word address, byte data) = 0;
+        ///
+        /// @returns `true` if address was written to
+        virtual bool write(word address, byte data) = 0;
     };
 }
 
-#endif // __RT_6502_EMULATOR_I_ADDRESSABLE_HPP__
+#endif // __RT_6502_EMULATOR_ADDRESSABLE_HPP__

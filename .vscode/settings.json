@@ -4,6 +4,11 @@
         "future": "cpp",
         "regex": "cpp",
         "system_error": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "array": "cpp",
+        "iterator": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "vector": "cpp"
     },
 }

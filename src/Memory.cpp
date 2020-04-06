@@ -23,7 +23,7 @@ namespace rt_6502_emulator {
         // initialize
         _isWritable   = isWritable;
         _addressStart = addressStart;
-        _addressEnd   = addressStart;
+        _addressEnd   = addressEnd;
 
         // allocate memory
         word size     = _addressEnd - _addressStart + 1;
@@ -59,15 +59,21 @@ namespace rt_6502_emulator {
     word Memory::addressStart() { return _addressStart; }
     word Memory::addressEnd()   { return _addressEnd; }
 
-    byte Memory::read(word address) {
-        assert(address >= _addressStart && address <= _addressStart);
-        word offset = address - _addressStart;
-        return _contents[offset];
+    bool Memory::read(word address, byte &data) {
+        if (address >= _addressStart && address <= _addressEnd) {
+            word offset = address - _addressStart;
+            data = _contents[offset];
+            return true;
+        }
+        return false;
     }
 
-    void Memory::write(word address, byte data) {
-        assert(address >= _addressStart && address <= _addressStart);
-        word offset = address - _addressStart;
-        _contents[offset] = data;
+    bool Memory::write(word address, byte data) {
+        if (address >= _addressStart && address <= _addressEnd) {
+            word offset = address - _addressStart;
+            _contents[offset] = data;
+            return true;
+        }
+        return false;
     }
 }
