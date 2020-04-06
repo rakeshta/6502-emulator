@@ -91,8 +91,8 @@ namespace rt_6502_emulator {
         byte   _opCycles;       // tracks remaining clock cycles in an active operation
 
         bool   _opTargetAcc;    // set to true by the addressing mode if the target is the accumulator
-        word   _opAddress;      // target address computed by the addressing mode of the active operation
 		bool   _opPageChange;   // set to true if the addressing mode causes a page boundary to be crossed
+        word   _opAddress;      // target address computed by the addressing mode of the active operation
 
 
 	// status register helpers -----------------------------------------------------------------------------------------

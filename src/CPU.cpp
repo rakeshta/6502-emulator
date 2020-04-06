@@ -72,6 +72,11 @@ namespace rt_6502_emulator {
             // set the number of cycles required for the op
             _opCycles = op.cycles;
 
+			// reset addressing state
+			_opTargetAcc  = false;
+			_opPageChange = false;
+			_opAddress    = 0x0000;
+
             // execute the operation
             (this->*op.addr)();
             (this->*op.inst)();
@@ -132,38 +137,29 @@ namespace rt_6502_emulator {
             : _read(_opAddress);
     }
 
-	void CPU::_addr_IMP() {
-        _opTargetAcc  = false;
-        _opAddress    = 0x00;
-	}
+	void CPU::_addr_IMP() {}
 
 	void CPU::_addr_ACC() {
         _opTargetAcc  = true;
-        _opAddress    = 0x0000;
 	}
 
 	void CPU::_addr_IMM() {
-        _opTargetAcc  = false;
         _opAddress    = ++_pc;
 	}
 
 	void CPU::_addr_ZPG() {
-        _opTargetAcc  = false;
         _opAddress    = _readNextByte();
 	}
 
 	void CPU::_addr_ZPX() {
-        _opTargetAcc  = false;
         _opAddress    = 0x00FF & (_readNextByte() + _regX);
 	}
 
 	void CPU::_addr_ZPY() {
-        _opTargetAcc  = false;
         _opAddress    = 0x00FF & (_readNextByte() + _regY);
 	}
 
 	void CPU::_addr_REL() {
-		_opTargetAcc  = false;
 
 		// get relative offset. can be negative with 2's complement format
 		word rel      = _readNextByte();
@@ -178,6 +174,7 @@ namespace rt_6502_emulator {
 	}
 
 	void CPU::_addr_ABS() {
+
 	}
 
 	void CPU::_addr_ABX() {
