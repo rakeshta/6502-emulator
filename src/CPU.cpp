@@ -132,6 +132,13 @@ namespace rt_6502_emulator {
     // addressing modes ------------------------------------------------------------------------------------------------
 
     byte CPU::_fetch() {
+
+		// extra clock tick required if addressing caused page boundary to be crossed
+		if (_opPageChange) {
+			_opCycles++;
+		}
+
+		// fetch data from accumulator or absolute address
         return _opTargetAcc
             ? _regA
             : _read(_opAddress);
@@ -174,13 +181,20 @@ namespace rt_6502_emulator {
 	}
 
 	void CPU::_addr_ABS() {
-
+		_opAddress    = _readNextWord();
 	}
 
 	void CPU::_addr_ABX() {
+		word address  = _readNextWord();
+		_opAddress    = address + _regX;
+		_opPageChange = (0xFF00 & address) != (0xFF00 & _opAddress);
 	}
 
 	void CPU::_addr_ABY() {
+		word address  = _readNextWord();
+		_opAddress    = address + _regY;
+		_opPageChange = (0xFF00 & address) != (0xFF00 & _opAddress);
+
 	}
 
 	void CPU::_addr_IND() {
