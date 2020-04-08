@@ -32,7 +32,6 @@
         return true; \
     } \
     static void test_##name() { \
-        printf("[START] %s\n", label); \
         _setup_(); \
         bool pass = __block__test__##name(); \
         _teardown_(); \
@@ -47,9 +46,9 @@
 
 #define TestAssert(condition, message, ...) \
     if (!(condition)) { \
-        printf("Assertion Failure: "); \
+        printf("        Assertion Failure: "); \
         printf((message), ##__VA_ARGS__); \
-        printf("\n    in %s:%d\n", __FILE__, __LINE__); \
+        printf("\n            in %s:%d\n", __FILE__, __LINE__); \
         return false; \
     }
 
