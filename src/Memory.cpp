@@ -83,7 +83,7 @@ namespace rt_6502_emulator {
     }
 
     bool Memory::write(word address, byte data) {
-        if (address >= _addressStart && address <= _addressEnd) {
+        if (_isWritable && address >= _addressStart && address <= _addressEnd) {
             word offset = address - _addressStart;
             _contents[offset] = data;
             return true;
