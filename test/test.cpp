@@ -11,5 +11,6 @@
 
 int main() {
     RunTestSuite(TestMemory);
+    RunTestSuite(TestBus);
     return 0;
 }

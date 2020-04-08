@@ -10,6 +10,7 @@
 #define __RT_6502_EMULATOR_CPU_HPP__
 
 #include "types.hpp"
+#include "Bus.hpp"
 
 namespace rt_6502_emulator {
 
@@ -82,6 +83,14 @@ namespace rt_6502_emulator {
 
         /// Performs one clocks worth of operations.
         void tick();
+
+
+	// public members --------------------------------------------------------------------------------------------------
+	public:
+
+		/// The CPU bus represents address & data lines on the CPU. Use it to add devices like RAM, ROM etc to the
+		/// CPU's address space.
+		const Bus bus;
 
 
     // internal state  -------------------------------------------------------------------------------------------------

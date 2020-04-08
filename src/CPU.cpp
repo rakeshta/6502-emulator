@@ -12,7 +12,7 @@ namespace rt_6502_emulator {
 
     // constructor & destructor ----------------------------------------------------------------------------------------
 
-    CPU::CPU() {
+    CPU::CPU() : bus(Bus()) {
         _initOperations();
         reset();
     }
@@ -194,7 +194,6 @@ namespace rt_6502_emulator {
 		word address  = _readNextWord();
 		_opAddress    = address + _regY;
 		_opPageChange = (0xFF00 & address) != (0xFF00 & _opAddress);
-
 	}
 
 	void CPU::_addr_IND() {

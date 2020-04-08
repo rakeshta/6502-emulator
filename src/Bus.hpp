@@ -17,7 +17,7 @@
 namespace rt_6502_emulator {
 
     /// The bus is used to connect device (like RAM, ROM etc) to the CPU.
-    /// It handles the muktiplexing of addressing between the CPU & device.
+    /// It handles the multiplexing of addressing between the CPU & device.
     class Bus: public Addressable {
     public:
 
@@ -37,7 +37,7 @@ namespace rt_6502_emulator {
         /// Start range of the memory address space. Hard coded to 0x0000.
         virtual word addressStart();
 
-        /// End range of the memoy address space. Hard coded to 0xFFFF.
+        /// End range of the memory address space. Hard coded to 0xFFFF.
         virtual word addressEnd();
 
         /// Read a byte from the specified memory address. If the address does not fall in the range of any connected
@@ -55,7 +55,7 @@ namespace rt_6502_emulator {
         /// @param address the address to which to write
         /// @param data    the data byte to write
         ///
-        /// @returns `true` if the address maps to a device and data was succesfully written to it.
+        /// @returns `true` if the address maps to a device and data was successfully written to it.
         virtual bool write(word address, byte data);
 
 
@@ -67,7 +67,7 @@ namespace rt_6502_emulator {
     private:
 
         /// List of devices attached to the bus
-        std::vector<std::shared_ptr<Addressable>> _devices;
+        std::vector<std::shared_ptr<Addressable> > _devices;
     };
 }
 

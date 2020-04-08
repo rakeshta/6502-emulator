@@ -21,17 +21,17 @@
     }
 
 #define TestSetUp(block) \
-    void _setup_() block
+    static void _setup_() block
 
 #define TestTearDown(block) \
-    void _teardown_() block \
+    static void _teardown_() block \
 
 #define TestCase(name, label, block) \
-    bool __block__test__##name() { \
+    static bool __block__test__##name() { \
         block \
         return true; \
     } \
-    void test_##name() { \
+    static void test_##name() { \
         printf("[START] %s\n", label); \
         _setup_(); \
         bool pass = __block__test__##name(); \

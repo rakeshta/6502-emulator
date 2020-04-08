@@ -13,10 +13,7 @@ namespace rt_6502_emulator {
 
     // constructors & destructor ---------------------------------------------------------------------------------------
 
-    Bus::Bus() {
-        _devices = {};
-    }
-
+    Bus::Bus() {}
     Bus::~Bus() {}
 
 
@@ -39,7 +36,7 @@ namespace rt_6502_emulator {
 
     bool Bus::read(word address, byte &data) {
         for (std::size_t i = 0; i < _devices.size(); i++) {
-            auto device = _devices[i];
+            std::shared_ptr<Addressable> device = _devices[i];
 
             if (address < device->addressStart() || address > device->addressEnd()) {
                 continue;
@@ -55,7 +52,7 @@ namespace rt_6502_emulator {
 
     bool Bus::write(word address, byte data) {
         for (std::size_t i = 0; i < _devices.size(); i++) {
-            auto device = _devices[i];
+            std::shared_ptr<Addressable> device = _devices[i];
 
             if (address < device->addressStart() || address > device->addressEnd()) {
                 continue;
