@@ -28,14 +28,14 @@ namespace rt_6502_emulator {
 
         /// Status flags on the status register
         enum STATUS_FLAG {
-            STATUS_FLAG_CARRY             = (1 << 0),
-            STATUS_FLAG_ZERO              = (1 << 1),
-            STATUS_FLAG_DISABLEINTERRUPTS = (1 << 2),
-            STATUS_FLAG_DECIMAL           = (1 << 3),
-            STATUS_FLAG_BREAK             = (1 << 4),
-            STATUS_FLAG_UNUSED            = (1 << 5),
-            STATUS_FLAG_OVERFLOW          = (1 << 6),
-            STATUS_FLAG_NEGATIVE          = (1 << 7),
+            STATUS_FLAG_CARRY              = (1 << 0),
+            STATUS_FLAG_ZERO               = (1 << 1),
+            STATUS_FLAG_DISABLE_INTERRUPTS = (1 << 2),
+            STATUS_FLAG_DECIMAL            = (1 << 3),
+            STATUS_FLAG_BREAK              = (1 << 4),
+            STATUS_FLAG_UNUSED             = (1 << 5),
+            STATUS_FLAG_OVERFLOW           = (1 << 6),
+            STATUS_FLAG_NEGATIVE           = (1 << 7),
         };
 
 
@@ -113,8 +113,24 @@ namespace rt_6502_emulator {
 	// status register helpers -----------------------------------------------------------------------------------------
 	private:
 
+		/// Tests whether the specified bit in the status register is on.
+		///
+		/// @param bit the bit (status flag) to test
+		///
+		/// @returns `true` if the specified status bit is `1`
 		bool _getStatusFlag(STATUS_FLAG bit);
+
+		/// Sets or resets the specified bit in the status register.
+		///
+		/// @param bit   the bit (status flag) to update
+		/// @param value `true` sets the bit to `1` and `false` sets it to `0`
 		void _setStatusFlag(STATUS_FLAG bit, bool value);
+
+		/// Convenience method to set the zero & negative bits on the status register based on the result of the last
+		/// CPU operation.
+		///
+		/// @param data the result of the last CPU operation
+		void _setResultStatusFlags(byte data);
 
 
     // bus access ------------------------------------------------------------------------------------------------------

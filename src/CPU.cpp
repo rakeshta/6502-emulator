@@ -107,6 +107,11 @@ namespace rt_6502_emulator {
         }
     }
 
+	void CPU::_setResultStatusFlags(byte data) {
+		_setStatusFlag(STATUS_FLAG_ZERO,     data == 0x00);
+		_setStatusFlag(STATUS_FLAG_NEGATIVE, data & 0x80);
+	}
+
 
     // bus access convenience methods ----------------------------------------------------------------------------------
 
@@ -375,12 +380,18 @@ namespace rt_6502_emulator {
     }
 
     void CPU::_inst_LDA() {
+		_regA = _fetch();
+		_setResultStatusFlags(_regA);
     }
 
     void CPU::_inst_LDX() {
+		_regX = _fetch();
+		_setResultStatusFlags(_regX);
     }
 
     void CPU::_inst_LDY() {
+		_regY = _fetch();
+		_setResultStatusFlags(_regY);
     }
 
     void CPU::_inst_LSR() {
