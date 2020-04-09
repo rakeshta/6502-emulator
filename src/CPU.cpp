@@ -24,9 +24,9 @@ namespace rt_6502_emulator {
 
     // accessors -------------------------------------------------------------------------------------------------------
 
-    byte CPU::getAccumulator()    { return _regA; }
-    byte CPU::getRegisterX()      { return _regX; }
-    byte CPU::getRegisterY()      { return _regY; }
+    byte CPU::getAccumulator()    { return _acc; }
+    byte CPU::getIndexX()         { return _idx; }
+    byte CPU::getIndexY()         { return _idy; }
     byte CPU::getStackPointer()   { return _stackP; }
     byte CPU::getStatus()         { return _status; }
     word CPU::getProgramCounter() { return _pc; }
@@ -41,9 +41,9 @@ namespace rt_6502_emulator {
     void CPU::reset() {
 
         // reset registers
-        _regA        = 0x00;
-        _regX        = 0x00;
-        _regY        = 0x00;
+        _acc         = 0x00;
+        _idx         = 0x00;
+        _idy         = 0x00;
         _stackP      = 0x00;
         _status      = STATUS_FLAG_UNUSED;
 
@@ -145,7 +145,7 @@ namespace rt_6502_emulator {
 
 		// fetch data from accumulator or absolute address
         return _opTargetAcc
-            ? _regA
+            ? _acc
             : _read(_opAddress);
     }
 
@@ -164,11 +164,11 @@ namespace rt_6502_emulator {
 	}
 
 	void CPU::_addr_ZPX() {
-        _opAddress    = 0x00FF & (_readNextByte() + _regX);
+        _opAddress    = 0x00FF & (_readNextByte() + _idx);
 	}
 
 	void CPU::_addr_ZPY() {
-        _opAddress    = 0x00FF & (_readNextByte() + _regY);
+        _opAddress    = 0x00FF & (_readNextByte() + _idy);
 	}
 
 	void CPU::_addr_REL() {
@@ -191,13 +191,13 @@ namespace rt_6502_emulator {
 
 	void CPU::_addr_ABX() {
 		word address  = _readNextWord();
-		_opAddress    = address + _regX;
+		_opAddress    = address + _idx;
 		_opPageChange = (0xFF00 & address) != (0xFF00 & _opAddress);
 	}
 
 	void CPU::_addr_ABY() {
 		word address  = _readNextWord();
-		_opAddress    = address + _regY;
+		_opAddress    = address + _idy;
 		_opPageChange = (0xFF00 & address) != (0xFF00 & _opAddress);
 	}
 
@@ -212,7 +212,7 @@ namespace rt_6502_emulator {
 	}
 
 	void CPU::_addr_IZX() {
-		word address  = _readNextByte() + _regX;
+		word address  = _readNextByte() + _idx;
 		word lsb      = _read(address & 0x00FF);
 		word msb      = _read((address + 1) & 0x00FF);
 		_opAddress    = (msb << 8) | lsb;
@@ -222,7 +222,7 @@ namespace rt_6502_emulator {
 		word address  = _readNextByte();
 		word lsb      = _read(address & 0x00FF);
 		word msb      = _read((address + 1) & 0x00FF);
-		_opAddress    = _regY + ((msb << 8) | lsb);
+		_opAddress    = _idy + ((msb << 8) | lsb);
 		_opPageChange = (msb << 8) != (_opAddress & 0xFF00);
     }
 
@@ -380,18 +380,18 @@ namespace rt_6502_emulator {
     }
 
     void CPU::_inst_LDA() {
-		_regA = _fetch();
-		_setResultStatusFlags(_regA);
+		_acc = _fetch();
+		_setResultStatusFlags(_acc);
     }
 
     void CPU::_inst_LDX() {
-		_regX = _fetch();
-		_setResultStatusFlags(_regX);
+		_idx = _fetch();
+		_setResultStatusFlags(_idx);
     }
 
     void CPU::_inst_LDY() {
-		_regY = _fetch();
-		_setResultStatusFlags(_regY);
+		_idy = _fetch();
+		_setResultStatusFlags(_idy);
     }
 
     void CPU::_inst_LSR() {

@@ -46,10 +46,10 @@ namespace rt_6502_emulator {
 		byte getAccumulator();
 
 		/// Gets the current value in the x (index) register
-		byte getRegisterX();
+		byte getIndexX();
 
 		/// Gets the current value in the y (index) register
-		byte getRegisterY();
+		byte getIndexY();
 
 		/// Gets the current value in the stack pointer
 		byte getStackPointer();
@@ -96,9 +96,9 @@ namespace rt_6502_emulator {
     // internal state  -------------------------------------------------------------------------------------------------
     private:
 
-        byte   _regA;           // accumulator
-        byte   _regX;           // x register
-        byte   _regY;           // y register
+        byte   _acc;            // accumulator
+        byte   _idx;            // x index register
+        byte   _idy;            // y index register
         byte   _stackP;         // stack pointer
         byte   _status;         // status register
         word   _pc;             // program counter
