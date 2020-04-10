@@ -6,7 +6,6 @@
 //  Copyright (c) 2020 Rakesh Ayyaswami. All rights reserved.
 //
 
-#include <stdlib.h>
 #include "TestMacros.hpp"
 #include "../src/Memory.hpp"
 

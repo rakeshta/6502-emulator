@@ -295,6 +295,15 @@ namespace rt_6502_emulator {
     /* Instructions for Legal Op codes  */
 
     void CPU::_inst_ADC() {
+		/* Add with carry uses 2's complement arithmetic. This allows it to be agnostic of whether the operands are
+		 * signed or unsigned numbers. https://en.wikipedia.org/wiki/Two%27s_complement
+		 * Overflow occurs when both operands are the same sign but the result is of a different sign.
+		 */
+		byte data = _fetch();
+		word res  = _acc + data + (_getStatusFlag(STATUS_FLAG_CARRY) ? 0x01 : 0x00);
+		_setStatusFlag(STATUS_FLAG_CARRY, res > 0xFF);
+		_setStatusFlag(STATUS_FLAG_OVERFLOW, (~(_acc ^ data) & (_acc ^ res)) & 0x80);
+		_setResultStatusFlags(res);
     }
 
     void CPU::_inst_AND() {
@@ -430,6 +439,17 @@ namespace rt_6502_emulator {
     }
 
     void CPU::_inst_SBC() {
+		/* Substract with carry uses 2's complement arithmetic and works similar to add with carry.
+		 * R = A - M - (1 - C)   == becomes ==>   R = A - (M + 1) + C
+		 * And by 2's complement arithmetic -M = M ^ 0xFF + 1   == i.e. ==>   -(M + 1) = M ^ 0xFF
+		 * With this, we can execute the whole thing similar to addition
+		 * R = A + (M ^ 0xFF) + c
+		 */
+		byte data = _fetch();
+		word res  = _acc + (data ^ 0xFF) + (_getStatusFlag(STATUS_FLAG_CARRY) ? 0x01 : 0x00);
+		_setStatusFlag(STATUS_FLAG_CARRY, res > 0xFF);
+		_setStatusFlag(STATUS_FLAG_OVERFLOW, (~(_acc ^ data) & (_acc ^ res)) & 0x80);
+		_setResultStatusFlags(res);
     }
 
     void CPU::_inst_SEC() {
