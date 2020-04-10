@@ -21,7 +21,7 @@ namespace rt_6502_emulator {
 	/// - http://www.oxyron.de/html/opcodes02.html
 	/// - http://archive.6502.org/datasheets/mos_6501-6505_mpu_preliminary_aug_1975.pdf
 	/// - http://nesdev.com/6502bugs.txt
-    class CPU {
+    class CPU : public Bus {
 
 	// status flags ----------------------------------------------------------------------------------------------------
 	public:
@@ -83,14 +83,6 @@ namespace rt_6502_emulator {
 
         /// Performs one clocks worth of operations.
         void tick();
-
-
-	// public members --------------------------------------------------------------------------------------------------
-	public:
-
-		/// The CPU bus represents address & data lines on the CPU. Use it to add devices like RAM, ROM etc to the
-		/// CPU's address space.
-		const Bus bus;
 
 
     // internal state  -------------------------------------------------------------------------------------------------

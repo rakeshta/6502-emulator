@@ -12,7 +12,7 @@ namespace rt_6502_emulator {
 
     // constructor & destructor ----------------------------------------------------------------------------------------
 
-    CPU::CPU() : bus(Bus()) {
+    CPU::CPU() {
         _initOperations();
         reset();
     }
@@ -116,11 +116,13 @@ namespace rt_6502_emulator {
     // bus access convenience methods ----------------------------------------------------------------------------------
 
     byte CPU::_read(word address) {
-        return 0x00;
+		byte data;
+		bool success = read(address, data);
+		return success ? data : 0x00;
     }
 
     void CPU::_write(word address, byte data) {
-        // no op
+		write(address, data);
     }
 
     byte CPU::_readNextByte() {
