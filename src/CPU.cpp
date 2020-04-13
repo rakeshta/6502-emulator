@@ -91,6 +91,15 @@ namespace rt_6502_emulator {
         }
     }
 
+	byte CPU::step() {
+		byte count = 0;
+		do {
+			tick();
+			count++;
+		} while(_opCycles > 0);
+		return count;
+	}
+
 
     // status register helpers -----------------------------------------------------------------------------------------
 

@@ -84,6 +84,12 @@ namespace rt_6502_emulator {
         /// Performs one clocks worth of operations.
         void tick();
 
+		/// Executes one instruction before returning. This is useful for debugging and stepping through the program.
+		/// It fires as many clock ticks as required to complete the instruction.
+		///
+		/// @returns the number of clock ticks elapsed
+		byte step();
+
 
     // internal state  -------------------------------------------------------------------------------------------------
     private:
