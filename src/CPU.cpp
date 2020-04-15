@@ -329,23 +329,56 @@ namespace rt_6502_emulator {
     /* Instructions for Legal Op codes  */
 
     bool CPU::_inst_ADC() {
+
 		/* Add with carry uses 2's complement arithmetic. This allows it to be agnostic of whether the operands are
 		 * signed or unsigned numbers. https://en.wikipedia.org/wiki/Two%27s_complement
 		 * Overflow occurs when both operands are the same sign but the result is of a different sign.
 		 */
+
+		// add fetched data with accumulator & carry bit
 		byte data = _fetch();
 		word res  = _acc + data + (_getStatusFlag(STATUS_FLAG_CARRY) ? 0x01 : 0x00);
+
+		// set status flags for result
 		_setStatusFlag(STATUS_FLAG_CARRY, res > 0xFF);
 		_setStatusFlag(STATUS_FLAG_OVERFLOW, (~(_acc ^ data) & (_acc ^ res)) & 0x80);
 		_setResultStatusFlags(res);
+
+		// save result in accumulator
+		_acc      = res;
+
+		// operation can use extra cycle
 		return true;
     }
 
     bool CPU::_inst_AND() {
-		return false;
+
+		// AND data with accumulator & store result in accumulator
+		byte data  = _fetch();
+		_acc      &= data;
+
+		// affect zero & negative flags
+		_setResultStatusFlags(_acc);
+
+		// operation can use extra cycle
+		return true;
     }
 
     bool CPU::_inst_ASL() {
+
+		// left shift fetched data & set result flags
+		word data  = (word)_fetch() << 1;
+		_setResultStatusFlags(data);
+
+		// store result based on addressing mode
+		if (_opTargetAcc) {
+			_acc   = data;
+		}
+		else {
+			_write(_opAddress, data);
+		}
+
+		// no extra cycles needed
 		return false;
     }
 
