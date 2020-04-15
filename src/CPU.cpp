@@ -383,15 +383,44 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_BCC() {
-		return false;
+
+		// no branching if carry set
+		if (_getStatusFlag(STATUS_FLAG_CARRY)) {
+			return false;
+		}
+
+		// branch instructions load the destination address on the program counter if their test is successfull.
+		// they also require an extra clock cycle to execute the branch. this is in addition to the extra cycle
+		// required if branch causes a page change (See REL addressing mode)
+		_pc = _opAddress;
+		_opCycles++;
+		return true;
     }
 
     bool CPU::_inst_BCS() {
-		return false;
+
+		// no branching if carry cleared
+		if (_getStatusFlag(STATUS_FLAG_CARRY) == false) {
+			return false;
+		}
+
+		// similar to other branch instructions. see BCC
+		_pc = _opAddress;
+		_opCycles++;
+		return true;
     }
 
     bool CPU::_inst_BEQ() {
-		return false;
+
+		// no branching if not equal (i.e not zero)
+		if (_getStatusFlag(STATUS_FLAG_ZERO) == false) {
+			return false;
+		}
+
+		// similar to other branch instructions. see BCC
+		_pc = _opAddress;
+		_opCycles++;
+		return true;
     }
 
     bool CPU::_inst_BIT() {
@@ -399,15 +428,42 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_BMI() {
-		return false;
+
+		// no branching if positive
+		if (_getStatusFlag(STATUS_FLAG_NEGATIVE) == false) {
+			return false;
+		}
+
+		// similar to other branch instructions. see BCC
+		_pc = _opAddress;
+		_opCycles++;
+		return true;
     }
 
     bool CPU::_inst_BNE() {
-		return false;
+
+		// no branching if equal (i.e zero)
+		if (_getStatusFlag(STATUS_FLAG_ZERO)) {
+			return false;
+		}
+
+		// similar to other branch instructions. see BCC
+		_pc = _opAddress;
+		_opCycles++;
+		return true;
     }
 
     bool CPU::_inst_BPL() {
-		return false;
+
+		// no branching if negative
+		if (_getStatusFlag(STATUS_FLAG_NEGATIVE)) {
+			return false;
+		}
+
+		// similar to other branch instructions. see BCC
+		_pc = _opAddress;
+		_opCycles++;
+		return true;
     }
 
     bool CPU::_inst_BRK() {
