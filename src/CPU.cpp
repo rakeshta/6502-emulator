@@ -74,12 +74,16 @@ namespace rt_6502_emulator {
 
 			// reset addressing state
 			_opTargetAcc  = false;
-			_opPageChange = false;
 			_opAddress    = 0x0000;
 
             // execute the operation
-            (this->*op.addr)();
-            (this->*op.inst)();
+			// require an extra cycle if both the addressing & instruction ask for it
+            bool extraCycleAddr = (this->*op.addr)();
+            bool extraCycleInst = (this->*op.inst)();
+
+			if (extraCycleAddr && extraCycleInst) {
+				_opCycles++;
+			}
 
             // ensure unused flag is always set in the status register
             _setStatusFlag(STATUS_FLAG_UNUSED, true);
@@ -148,41 +152,41 @@ namespace rt_6502_emulator {
     // addressing modes ------------------------------------------------------------------------------------------------
 
     byte CPU::_fetch() {
-
-		// extra clock tick required if addressing caused page boundary to be crossed
-		if (_opPageChange) {
-			_opCycles++;
-		}
-
-		// fetch data from accumulator or absolute address
         return _opTargetAcc
             ? _acc
             : _read(_opAddress);
     }
 
-	void CPU::_addr_IMP() {}
+	bool CPU::_addr_IMP() {
+		return false;
+	}
 
-	void CPU::_addr_ACC() {
+	bool CPU::_addr_ACC() {
         _opTargetAcc  = true;
+		return false;
 	}
 
-	void CPU::_addr_IMM() {
+	bool CPU::_addr_IMM() {
         _opAddress    = ++_pc;
+		return false;
 	}
 
-	void CPU::_addr_ZPG() {
+	bool CPU::_addr_ZPG() {
         _opAddress    = _readNextByte();
+		return false;
 	}
 
-	void CPU::_addr_ZPX() {
+	bool CPU::_addr_ZPX() {
         _opAddress    = 0x00FF & (_readNextByte() + _idx);
+		return false;
 	}
 
-	void CPU::_addr_ZPY() {
+	bool CPU::_addr_ZPY() {
         _opAddress    = 0x00FF & (_readNextByte() + _idy);
+		return false;
 	}
 
-	void CPU::_addr_REL() {
+	bool CPU::_addr_REL() {
 
 		// get relative offset. can be negative with 2's complement format
 		word rel      = _readNextByte();
@@ -191,28 +195,29 @@ namespace rt_6502_emulator {
 		}
 
 		// final address is offset from program counter
-		// mark page overflow if not in same page as program counter
+		// need extra cycle if page boundary crossed
 		_opAddress    = _pc + rel;
-		_opPageChange = (0xFF00 & _pc) != (0xFF00 & _opAddress);
+		return (0xFF00 & _pc) != (0xFF00 & _opAddress);
 	}
 
-	void CPU::_addr_ABS() {
+	bool CPU::_addr_ABS() {
 		_opAddress    = _readNextWord();
+		return false;
 	}
 
-	void CPU::_addr_ABX() {
+	bool CPU::_addr_ABX() {
 		word address  = _readNextWord();
 		_opAddress    = address + _idx;
-		_opPageChange = (0xFF00 & address) != (0xFF00 & _opAddress);
+		return (0xFF00 & address) != (0xFF00 & _opAddress);
 	}
 
-	void CPU::_addr_ABY() {
+	bool CPU::_addr_ABY() {
 		word address  = _readNextWord();
 		_opAddress    = address + _idy;
-		_opPageChange = (0xFF00 & address) != (0xFF00 & _opAddress);
+		return (0xFF00 & address) != (0xFF00 & _opAddress);
 	}
 
-	void CPU::_addr_IND() {
+	bool CPU::_addr_IND() {
 		word address  = _readNextWord();
 		word lsb      = _read(address);
 		// HARDWARE BUG: If address is last byte of page, adding 1 wraps around to first address of page instead of
@@ -220,21 +225,23 @@ namespace rt_6502_emulator {
 		// SEE: JMP bug at http://nesdev.com/6502bugs.txt
 		word msb      = (address & 0x00FF) == 0x00FF ? _read(address & 0xFF00) : _read(address + 1);
 		_opAddress    = (msb << 8) | lsb;
+		return false;
 	}
 
-	void CPU::_addr_IZX() {
+	bool CPU::_addr_IZX() {
 		word address  = _readNextByte() + _idx;
 		word lsb      = _read(address & 0x00FF);
 		word msb      = _read((address + 1) & 0x00FF);
 		_opAddress    = (msb << 8) | lsb;
+		return false;
 	}
 
-    void CPU::_addr_IZY() {
+    bool CPU::_addr_IZY() {
 		word address  = _readNextByte();
 		word lsb      = _read(address & 0x00FF);
 		word msb      = _read((address + 1) & 0x00FF);
 		_opAddress    = _idy + ((msb << 8) | lsb);
-		_opPageChange = (msb << 8) != (_opAddress & 0xFF00);
+		return (msb << 8) != (_opAddress & 0xFF00);
     }
 
 
@@ -242,68 +249,86 @@ namespace rt_6502_emulator {
 
     /* Instructions for Illegal Op Codes */
 
-    void CPU::_inst_KIL() {
+    bool CPU::_inst_KIL() {
+		return false;
     }
 
-    void CPU::_inst_SLO() {
+    bool CPU::_inst_SLO() {
+		return false;
     }
 
-    void CPU::_inst_RLA() {
+    bool CPU::_inst_RLA() {
+		return false;
     }
 
-    void CPU::_inst_SRE() {
+    bool CPU::_inst_SRE() {
+		return false;
     }
 
-    void CPU::_inst_RRA() {
+    bool CPU::_inst_RRA() {
+		return false;
     }
 
-    void CPU::_inst_SAX() {
+    bool CPU::_inst_SAX() {
+		return false;
     }
 
-    void CPU::_inst_LAX() {
+    bool CPU::_inst_LAX() {
+		return false;
     }
 
-    void CPU::_inst_DCP() {
+    bool CPU::_inst_DCP() {
+		return false;
     }
 
-    void CPU::_inst_ISC() {
+    bool CPU::_inst_ISC() {
+		return false;
     }
 
-    void CPU::_inst_ANC() {
+    bool CPU::_inst_ANC() {
+		return false;
     }
 
-    void CPU::_inst_ALR() {
+    bool CPU::_inst_ALR() {
+		return false;
     }
 
-    void CPU::_inst_ARR() {
+    bool CPU::_inst_ARR() {
+		return false;
     }
 
-    void CPU::_inst_XAA() {
+    bool CPU::_inst_XAA() {
+		return false;
     }
 
-    void CPU::_inst_AXS() {
+    bool CPU::_inst_AXS() {
+		return false;
     }
 
-    void CPU::_inst_AHX() {
+    bool CPU::_inst_AHX() {
+		return false;
     }
 
-    void CPU::_inst_SHY() {
+    bool CPU::_inst_SHY() {
+		return false;
     }
 
-    void CPU::_inst_SHX() {
+    bool CPU::_inst_SHX() {
+		return false;
     }
 
-    void CPU::_inst_TAS() {
+    bool CPU::_inst_TAS() {
+		return false;
     }
 
-    void CPU::_inst_LAS() {
+    bool CPU::_inst_LAS() {
+		return false;
     }
-
 
 
     /* Instructions for Legal Op codes  */
 
-    void CPU::_inst_ADC() {
+    bool CPU::_inst_ADC() {
 		/* Add with carry uses 2's complement arithmetic. This allows it to be agnostic of whether the operands are
 		 * signed or unsigned numbers. https://en.wikipedia.org/wiki/Two%27s_complement
 		 * Overflow occurs when both operands are the same sign but the result is of a different sign.
@@ -313,141 +338,184 @@ namespace rt_6502_emulator {
 		_setStatusFlag(STATUS_FLAG_CARRY, res > 0xFF);
 		_setStatusFlag(STATUS_FLAG_OVERFLOW, (~(_acc ^ data) & (_acc ^ res)) & 0x80);
 		_setResultStatusFlags(res);
+		return true;
     }
 
-    void CPU::_inst_AND() {
+    bool CPU::_inst_AND() {
+		return false;
     }
 
-    void CPU::_inst_ASL() {
+    bool CPU::_inst_ASL() {
+		return false;
     }
 
-    void CPU::_inst_BCC() {
+    bool CPU::_inst_BCC() {
+		return false;
     }
 
-    void CPU::_inst_BCS() {
+    bool CPU::_inst_BCS() {
+		return false;
     }
 
-    void CPU::_inst_BEQ() {
+    bool CPU::_inst_BEQ() {
+		return false;
     }
 
-    void CPU::_inst_BIT() {
+    bool CPU::_inst_BIT() {
+		return false;
     }
 
-    void CPU::_inst_BMI() {
+    bool CPU::_inst_BMI() {
+		return false;
     }
 
-    void CPU::_inst_BNE() {
+    bool CPU::_inst_BNE() {
+		return false;
     }
 
-    void CPU::_inst_BPL() {
+    bool CPU::_inst_BPL() {
+		return false;
     }
 
-    void CPU::_inst_BRK() {
+    bool CPU::_inst_BRK() {
+		return false;
     }
 
-    void CPU::_inst_BVC() {
+    bool CPU::_inst_BVC() {
+		return false;
     }
 
-    void CPU::_inst_BVS() {
+    bool CPU::_inst_BVS() {
+		return false;
     }
 
-    void CPU::_inst_CLC() {
+    bool CPU::_inst_CLC() {
+		return false;
     }
 
-    void CPU::_inst_CLD() {
+    bool CPU::_inst_CLD() {
+		return false;
     }
 
-    void CPU::_inst_CLI() {
+    bool CPU::_inst_CLI() {
+		return false;
     }
 
-    void CPU::_inst_CLV() {
+    bool CPU::_inst_CLV() {
+		return false;
     }
 
-    void CPU::_inst_CMP() {
+    bool CPU::_inst_CMP() {
+		return false;
     }
 
-    void CPU::_inst_CPX() {
+    bool CPU::_inst_CPX() {
+		return false;
     }
 
-    void CPU::_inst_CPY() {
+    bool CPU::_inst_CPY() {
+		return false;
     }
 
-    void CPU::_inst_DEC() {
+    bool CPU::_inst_DEC() {
+		return false;
     }
 
-    void CPU::_inst_DEX() {
+    bool CPU::_inst_DEX() {
+		return false;
     }
 
-    void CPU::_inst_DEY() {
+    bool CPU::_inst_DEY() {
+		return false;
     }
 
-    void CPU::_inst_EOR() {
+    bool CPU::_inst_EOR() {
+		return false;
     }
 
-    void CPU::_inst_INC() {
+    bool CPU::_inst_INC() {
+		return false;
     }
 
-    void CPU::_inst_INX() {
+    bool CPU::_inst_INX() {
+		return false;
     }
 
-    void CPU::_inst_INY() {
+    bool CPU::_inst_INY() {
+		return false;
     }
 
-    void CPU::_inst_JMP() {
+    bool CPU::_inst_JMP() {
+		return false;
     }
 
-    void CPU::_inst_JSR() {
+    bool CPU::_inst_JSR() {
+		return false;
     }
 
-    void CPU::_inst_LDA() {
+    bool CPU::_inst_LDA() {
 		_acc = _fetch();
 		_setResultStatusFlags(_acc);
+		return true;
     }
 
-    void CPU::_inst_LDX() {
+    bool CPU::_inst_LDX() {
 		_idx = _fetch();
 		_setResultStatusFlags(_idx);
+		return true;
     }
 
-    void CPU::_inst_LDY() {
+    bool CPU::_inst_LDY() {
 		_idy = _fetch();
 		_setResultStatusFlags(_idy);
+		return true;
     }
 
-    void CPU::_inst_LSR() {
+    bool CPU::_inst_LSR() {
+		return false;
     }
 
-    void CPU::_inst_NOP() {
+    bool CPU::_inst_NOP() {
+		return false;
     }
 
-    void CPU::_inst_ORA() {
+    bool CPU::_inst_ORA() {
+		return false;
     }
 
-    void CPU::_inst_PHA() {
+    bool CPU::_inst_PHA() {
+		return false;
     }
 
-    void CPU::_inst_PHP() {
+    bool CPU::_inst_PHP() {
+		return false;
     }
 
-    void CPU::_inst_PLA() {
+    bool CPU::_inst_PLA() {
+		return false;
     }
 
-    void CPU::_inst_PLP() {
+    bool CPU::_inst_PLP() {
+		return false;
     }
 
-    void CPU::_inst_ROL() {
+    bool CPU::_inst_ROL() {
+		return false;
     }
 
-    void CPU::_inst_ROR() {
+    bool CPU::_inst_ROR() {
+		return false;
     }
 
-    void CPU::_inst_RTI() {
+    bool CPU::_inst_RTI() {
+		return false;
     }
 
-    void CPU::_inst_RTS() {
+    bool CPU::_inst_RTS() {
+		return false;
     }
 
-    void CPU::_inst_SBC() {
+    bool CPU::_inst_SBC() {
 		/* Substract with carry uses 2's complement arithmetic and works similar to add with carry.
 		 * R = A - M - (1 - C)   == becomes ==>   R = A - (M + 1) + C
 		 * And by 2's complement arithmetic -M = M ^ 0xFF + 1   == i.e. ==>   -(M + 1) = M ^ 0xFF
@@ -459,42 +527,55 @@ namespace rt_6502_emulator {
 		_setStatusFlag(STATUS_FLAG_CARRY, res > 0xFF);
 		_setStatusFlag(STATUS_FLAG_OVERFLOW, (~(_acc ^ data) & (_acc ^ res)) & 0x80);
 		_setResultStatusFlags(res);
+		return true;
     }
 
-    void CPU::_inst_SEC() {
+    bool CPU::_inst_SEC() {
+		return false;
     }
 
-    void CPU::_inst_SED() {
+    bool CPU::_inst_SED() {
+		return false;
     }
 
-    void CPU::_inst_SEI() {
+    bool CPU::_inst_SEI() {
+		return false;
     }
 
-    void CPU::_inst_STA() {
+    bool CPU::_inst_STA() {
+		return false;
     }
 
-    void CPU::_inst_STX() {
+    bool CPU::_inst_STX() {
+		return false;
     }
 
-    void CPU::_inst_STY() {
+    bool CPU::_inst_STY() {
+		return false;
     }
 
-    void CPU::_inst_TAX() {
+    bool CPU::_inst_TAX() {
+		return false;
     }
 
-    void CPU::_inst_TAY() {
+    bool CPU::_inst_TAY() {
+		return false;
     }
 
-    void CPU::_inst_TSX() {
+    bool CPU::_inst_TSX() {
+		return false;
     }
 
-    void CPU::_inst_TXA() {
+    bool CPU::_inst_TXA() {
+		return false;
     }
 
-    void CPU::_inst_TXS() {
+    bool CPU::_inst_TXS() {
+		return false;
     }
 
-    void CPU::_inst_TYA() {
+    bool CPU::_inst_TYA() {
+		return false;
     }
 
 
