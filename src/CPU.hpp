@@ -15,16 +15,16 @@
 namespace rt_6502_emulator {
 
     /// The 6502 CPU.
-	///
-	/// References:
-	/// - https://www.masswerk.at/6502/6502_instruction_set.html
-	/// - http://www.oxyron.de/html/opcodes02.html
-	/// - http://archive.6502.org/datasheets/mos_6501-6505_mpu_preliminary_aug_1975.pdf
-	/// - http://nesdev.com/6502bugs.txt
+    ///
+    /// References:
+    /// - https://www.masswerk.at/6502/6502_instruction_set.html
+    /// - http://www.oxyron.de/html/opcodes02.html
+    /// - http://archive.6502.org/datasheets/mos_6501-6505_mpu_preliminary_aug_1975.pdf
+    /// - http://nesdev.com/6502bugs.txt
     class CPU : public Bus {
 
-	// status flags ----------------------------------------------------------------------------------------------------
-	public:
+    // status flags ----------------------------------------------------------------------------------------------------
+    public:
 
         /// Status flags on the status register
         enum STATUS_FLAG {
@@ -39,30 +39,30 @@ namespace rt_6502_emulator {
         };
 
 
-	// accessors -------------------------------------------------------------------------------------------------------
-	public:
+    // accessors -------------------------------------------------------------------------------------------------------
+    public:
 
-		/// Gets the current value in the accumulator
-		byte getAccumulator();
+        /// Gets the current value in the accumulator
+        byte getAccumulator();
 
-		/// Gets the current value in the x (index) register
-		byte getIndexX();
+        /// Gets the current value in the x (index) register
+        byte getIndexX();
 
-		/// Gets the current value in the y (index) register
-		byte getIndexY();
+        /// Gets the current value in the y (index) register
+        byte getIndexY();
 
-		/// Gets the current value in the stack pointer
-		byte getStackPointer();
+        /// Gets the current value in the stack pointer
+        byte getStackPointer();
 
-		/// Gets the current value in the status register
-		byte getStatus();
+        /// Gets the current value in the status register
+        byte getStatus();
 
-		/// Gets the current address in the program counter
-		word getProgramCounter();
+        /// Gets the current address in the program counter
+        word getProgramCounter();
 
-		/// Gets whether the current operation has completed executing.
-		/// This is useful for debugging & single stepping through the program.
-		bool isOperationComplete();
+        /// Gets whether the current operation has completed executing.
+        /// This is useful for debugging & single stepping through the program.
+        bool isOperationComplete();
 
 
     // public methods  -------------------------------------------------------------------------------------------------
@@ -84,11 +84,11 @@ namespace rt_6502_emulator {
         /// Performs one clocks worth of operations.
         void tick();
 
-		/// Executes one instruction before returning. This is useful for debugging and stepping through the program.
-		/// It fires as many clock ticks as required to complete the instruction.
-		///
-		/// @returns the number of clock ticks elapsed
-		byte step();
+        /// Executes one instruction before returning. This is useful for debugging and stepping through the program.
+        /// It fires as many clock ticks as required to complete the instruction.
+        ///
+        /// @returns the number of clock ticks elapsed
+        byte step();
 
 
     // internal state  -------------------------------------------------------------------------------------------------
@@ -107,27 +107,27 @@ namespace rt_6502_emulator {
         word   _opAddress;      // target address computed by the addressing mode of the active operation
 
 
-	// status register helpers -----------------------------------------------------------------------------------------
-	private:
+    // status register helpers -----------------------------------------------------------------------------------------
+    private:
 
-		/// Tests whether the specified bit in the status register is on.
-		///
-		/// @param bit the bit (status flag) to test
-		///
-		/// @returns `true` if the specified status bit is `1`
-		bool _getStatusFlag(STATUS_FLAG bit);
+        /// Tests whether the specified bit in the status register is on.
+        ///
+        /// @param bit the bit (status flag) to test
+        ///
+        /// @returns `true` if the specified status bit is `1`
+        bool _getStatusFlag(STATUS_FLAG bit);
 
-		/// Sets or resets the specified bit in the status register.
-		///
-		/// @param bit   the bit (status flag) to update
-		/// @param value `true` sets the bit to `1` and `false` sets it to `0`
-		void _setStatusFlag(STATUS_FLAG bit, bool value);
+        /// Sets or resets the specified bit in the status register.
+        ///
+        /// @param bit   the bit (status flag) to update
+        /// @param value `true` sets the bit to `1` and `false` sets it to `0`
+        void _setStatusFlag(STATUS_FLAG bit, bool value);
 
-		/// Convenience method to set the zero & negative bits on the status register based on the result of the last
-		/// CPU operation.
-		///
-		/// @param data the result of the last CPU operation
-		void _setResultStatusFlags(byte data);
+        /// Convenience method to set the zero & negative bits on the status register based on the result of the last
+        /// CPU operation.
+        ///
+        /// @param data the result of the last CPU operation
+        void _setResultStatusFlags(byte data);
 
 
     // bus access ------------------------------------------------------------------------------------------------------
@@ -166,54 +166,54 @@ namespace rt_6502_emulator {
 
         byte _fetch();
 
-	    /// Implied - The source / destination of the operand is implied in the instruction itself.
-	    bool _addr_IMP();
+        /// Implied - The source / destination of the operand is implied in the instruction itself.
+        bool _addr_IMP();
 
-	    /// Accumulator - The operand is implicitly defined as the accumulator.
-	    bool _addr_ACC();
+        /// Accumulator - The operand is implicitly defined as the accumulator.
+        bool _addr_ACC();
 
-	    /// Immediate - A single byte operand follows the instruction in the next position in memory.
-	    bool _addr_IMM();
+        /// Immediate - A single byte operand follows the instruction in the next position in memory.
+        bool _addr_IMM();
 
-	    /// Zero Page - A single byte address offset follows the instruction. The page (MSB) of the address
-	    /// is always 0x00.
-	    bool _addr_ZPG();
+        /// Zero Page - A single byte address offset follows the instruction. The page (MSB) of the address
+        /// is always 0x00.
+        bool _addr_ZPG();
 
-	    /// Zero Page, X - Similar to the zero page addressing but with the target address calculated by
-	    /// adding the `X` register value to the address.
-	    bool _addr_ZPX();
+        /// Zero Page, X - Similar to the zero page addressing but with the target address calculated by
+        /// adding the `X` register value to the address.
+        bool _addr_ZPX();
 
-	    /// Zero Page, Y - Similar to the zero page addressing but with the target address calculated by
-	    /// adding the `Y` register value to the address.
-	    bool _addr_ZPY();
+        /// Zero Page, Y - Similar to the zero page addressing but with the target address calculated by
+        /// adding the `Y` register value to the address.
+        bool _addr_ZPY();
 
-	    /// Relative - A single byte address offset follows the instruction. The page (MSB) of the address
-	    /// is obtained from the program counter.
-	    bool _addr_REL();
+        /// Relative - A single byte address offset follows the instruction. The page (MSB) of the address
+        /// is obtained from the program counter.
+        bool _addr_REL();
 
-	    /// Absolute - A two byte address follows the instruction. The first byte is the LSB (bits 0 to 7)
-	    /// and the second byte is the MSB (bits 8 to 15).
-	    bool _addr_ABS();
+        /// Absolute - A two byte address follows the instruction. The first byte is the LSB (bits 0 to 7)
+        /// and the second byte is the MSB (bits 8 to 15).
+        bool _addr_ABS();
 
-	    /// Absolute, X - Similar to absolute addressing but with the target address calculated by adding
-	    /// the `X` register value to the address in the instruction.
-	    bool _addr_ABX();
+        /// Absolute, X - Similar to absolute addressing but with the target address calculated by adding
+        /// the `X` register value to the address in the instruction.
+        bool _addr_ABX();
 
-	    /// Absolute, Y - Similar to absolute addressing but with the target address calculated by adding
-	    /// the `Y` register value to the address in the instruction
-	    bool _addr_ABY();
+        /// Absolute, Y - Similar to absolute addressing but with the target address calculated by adding
+        /// the `Y` register value to the address in the instruction
+        bool _addr_ABY();
 
-	    /// Indirect - A two byte address follows the instruction that points to the location where the
-	    /// LSB of the target address is located.
-	    bool _addr_IND();
+        /// Indirect - A two byte address follows the instruction that points to the location where the
+        /// LSB of the target address is located.
+        bool _addr_IND();
 
-	    /// Indexed Indirect - A single byte zero page address offset follows the instruction. This is added
-	    /// to the `X` register value to get the location where the LSB of the target address is found.
-	    bool _addr_IZX();
+        /// Indexed Indirect - A single byte zero page address offset follows the instruction. This is added
+        /// to the `X` register value to get the location where the LSB of the target address is found.
+        bool _addr_IZX();
 
-	    /// Indirect Indexed - A single byte zero page address offset follows the instruction. This points
-	    /// to the LSB of the target address which is then offset using the value of the `X` register.
-	    bool _addr_IZY();
+        /// Indirect Indexed - A single byte zero page address offset follows the instruction. This points
+        /// to the LSB of the target address which is then offset using the value of the `X` register.
+        bool _addr_IZY();
 
 
     // instructions ----------------------------------------------------------------------------------------------------
@@ -221,240 +221,240 @@ namespace rt_6502_emulator {
 
         /* Instructions for Illegal Op Codes */
 
-	    /// Halts the CPU
-	    bool _inst_KIL();
+        /// Halts the CPU
+        bool _inst_KIL();
 
-	    /// TBD - Illegal op code
-	    bool _inst_SLO();
+        /// TBD - Illegal op code
+        bool _inst_SLO();
 
-	    /// TBD - Illegal op code
-	    bool _inst_RLA();
+        /// TBD - Illegal op code
+        bool _inst_RLA();
 
-	    /// TBD - Illegal op code
-	    bool _inst_SRE();
+        /// TBD - Illegal op code
+        bool _inst_SRE();
 
-	    /// TBD - Illegal op code
-	    bool _inst_RRA();
+        /// TBD - Illegal op code
+        bool _inst_RRA();
 
-	    /// TBD - Illegal op code
-	    bool _inst_SAX();
+        /// TBD - Illegal op code
+        bool _inst_SAX();
 
-	    /// TBD - Illegal op code
-	    bool _inst_LAX();
+        /// TBD - Illegal op code
+        bool _inst_LAX();
 
-	    /// TBD - Illegal op code
-	    bool _inst_DCP();
+        /// TBD - Illegal op code
+        bool _inst_DCP();
 
-	    /// TBD - Illegal op code
-	    bool _inst_ISC();
+        /// TBD - Illegal op code
+        bool _inst_ISC();
 
-	    /// TBD - Illegal op code
-	    bool _inst_ANC();
+        /// TBD - Illegal op code
+        bool _inst_ANC();
 
-	    /// TBD - Illegal op code
-	    bool _inst_ALR();
+        /// TBD - Illegal op code
+        bool _inst_ALR();
 
-	    /// TBD - Illegal op code
-	    bool _inst_ARR();
+        /// TBD - Illegal op code
+        bool _inst_ARR();
 
-	    /// TBD - Illegal op code
-	    bool _inst_XAA();
+        /// TBD - Illegal op code
+        bool _inst_XAA();
 
-	    /// TBD - Illegal op code
-	    bool _inst_AXS();
+        /// TBD - Illegal op code
+        bool _inst_AXS();
 
-	    /// TBD - Illegal op code
-	    bool _inst_AHX();
+        /// TBD - Illegal op code
+        bool _inst_AHX();
 
-	    /// TBD - Illegal op code
-	    bool _inst_SHY();
+        /// TBD - Illegal op code
+        bool _inst_SHY();
 
-	    /// TBD - Illegal op code
-	    bool _inst_SHX();
+        /// TBD - Illegal op code
+        bool _inst_SHX();
 
-	    /// TBD - Illegal op code
-	    bool _inst_TAS();
+        /// TBD - Illegal op code
+        bool _inst_TAS();
 
-	    /// TBD - Illegal op code
-	    bool _inst_LAS();
+        /// TBD - Illegal op code
+        bool _inst_LAS();
 
 
-	    /* Instructions for Legal Op codes  */
+        /* Instructions for Legal Op codes  */
 
-	    /// Add with carry
-		bool _inst_ADC();
+        /// Add with carry
+        bool _inst_ADC();
 
-		/// And (with accumulator)
-		bool _inst_AND();
+        /// And (with accumulator)
+        bool _inst_AND();
 
-		/// Arithmetic shift left
-		bool _inst_ASL();
+        /// Arithmetic shift left
+        bool _inst_ASL();
 
-		/// Branch on carry clear
-		bool _inst_BCC();
+        /// Branch on carry clear
+        bool _inst_BCC();
 
-		/// Branch on carry set
-		bool _inst_BCS();
+        /// Branch on carry set
+        bool _inst_BCS();
 
-		/// Branch on equal (zero set)
-		bool _inst_BEQ();
+        /// Branch on equal (zero set)
+        bool _inst_BEQ();
 
-		/// Bit test
-		bool _inst_BIT();
+        /// Bit test
+        bool _inst_BIT();
 
-		/// Branch on minus (negative set)
-		bool _inst_BMI();
+        /// Branch on minus (negative set)
+        bool _inst_BMI();
 
-		/// Branch on not equal (zero clear)
-		bool _inst_BNE();
+        /// Branch on not equal (zero clear)
+        bool _inst_BNE();
 
-		/// Branch on plus (negative clear)
-		bool _inst_BPL();
+        /// Branch on plus (negative clear)
+        bool _inst_BPL();
 
-		/// Break / interrupt
-		bool _inst_BRK();
+        /// Break / interrupt
+        bool _inst_BRK();
 
-		/// Branch on overflow clear
-		bool _inst_BVC();
+        /// Branch on overflow clear
+        bool _inst_BVC();
 
-		/// Branch on overflow set
-		bool _inst_BVS();
+        /// Branch on overflow set
+        bool _inst_BVS();
 
-		/// Clear carry
-		bool _inst_CLC();
+        /// Clear carry
+        bool _inst_CLC();
 
-		/// Clear decimal
-		bool _inst_CLD();
+        /// Clear decimal
+        bool _inst_CLD();
 
-		/// Clear interrupt disable
-		bool _inst_CLI();
+        /// Clear interrupt disable
+        bool _inst_CLI();
 
-		/// Clear overflow
-		bool _inst_CLV();
+        /// Clear overflow
+        bool _inst_CLV();
 
-		/// Compare (with accumulator)
-		bool _inst_CMP();
+        /// Compare (with accumulator)
+        bool _inst_CMP();
 
-		/// Compare with X
-		bool _inst_CPX();
+        /// Compare with X
+        bool _inst_CPX();
 
-		/// Compare with Y
-		bool _inst_CPY();
+        /// Compare with Y
+        bool _inst_CPY();
 
-		/// Decrement
-		bool _inst_DEC();
+        /// Decrement
+        bool _inst_DEC();
 
-		/// Decrement X
-		bool _inst_DEX();
+        /// Decrement X
+        bool _inst_DEX();
 
-		/// Decrement Y
-		bool _inst_DEY();
+        /// Decrement Y
+        bool _inst_DEY();
 
-		/// Exclusive or (with accumulator)
-		bool _inst_EOR();
+        /// Exclusive or (with accumulator)
+        bool _inst_EOR();
 
-		/// Increment
-		bool _inst_INC();
+        /// Increment
+        bool _inst_INC();
 
-		/// Increment X
-		bool _inst_INX();
+        /// Increment X
+        bool _inst_INX();
 
-		/// Increment Y
-		bool _inst_INY();
+        /// Increment Y
+        bool _inst_INY();
 
-		/// Jump
-		bool _inst_JMP();
+        /// Jump
+        bool _inst_JMP();
 
-		/// Jump subroutine
-		bool _inst_JSR();
+        /// Jump subroutine
+        bool _inst_JSR();
 
-		/// Load accumulator
-		bool _inst_LDA();
+        /// Load accumulator
+        bool _inst_LDA();
 
-		/// Load X
-		bool _inst_LDX();
+        /// Load X
+        bool _inst_LDX();
 
-		/// Load Y
-		bool _inst_LDY();
+        /// Load Y
+        bool _inst_LDY();
 
-		/// Logical shift right
-		bool _inst_LSR();
+        /// Logical shift right
+        bool _inst_LSR();
 
-		/// No operation
-		bool _inst_NOP();
+        /// No operation
+        bool _inst_NOP();
 
-		/// Or with accumulator
-		bool _inst_ORA();
+        /// Or with accumulator
+        bool _inst_ORA();
 
-		/// Push accumulator
-		bool _inst_PHA();
+        /// Push accumulator
+        bool _inst_PHA();
 
-		/// Push processor status (SR)
-		bool _inst_PHP();
+        /// Push processor status (SR)
+        bool _inst_PHP();
 
-		/// Pull accumulator
-		bool _inst_PLA();
+        /// Pull accumulator
+        bool _inst_PLA();
 
-		/// Pull processor status (SR)
-		bool _inst_PLP();
+        /// Pull processor status (SR)
+        bool _inst_PLP();
 
-		/// Rotate left
-		bool _inst_ROL();
+        /// Rotate left
+        bool _inst_ROL();
 
-		/// Rotate right
-		bool _inst_ROR();
+        /// Rotate right
+        bool _inst_ROR();
 
-		/// Return from interrupt
-		bool _inst_RTI();
+        /// Return from interrupt
+        bool _inst_RTI();
 
-		/// Return from subroutine
-		bool _inst_RTS();
+        /// Return from subroutine
+        bool _inst_RTS();
 
-		/// Subtract with carry
-		bool _inst_SBC();
+        /// Subtract with carry
+        bool _inst_SBC();
 
-		/// Set carry
-		bool _inst_SEC();
+        /// Set carry
+        bool _inst_SEC();
 
-		/// Set decimal
-		bool _inst_SED();
+        /// Set decimal
+        bool _inst_SED();
 
-		/// Set interrupt disable
-		bool _inst_SEI();
+        /// Set interrupt disable
+        bool _inst_SEI();
 
-		/// Store accumulator
-		bool _inst_STA();
+        /// Store accumulator
+        bool _inst_STA();
 
-		/// Store X
-		bool _inst_STX();
+        /// Store X
+        bool _inst_STX();
 
-		/// Store Y
-		bool _inst_STY();
+        /// Store Y
+        bool _inst_STY();
 
-		/// Transfer accumulator to X
-		bool _inst_TAX();
+        /// Transfer accumulator to X
+        bool _inst_TAX();
 
-		/// Transfer accumulator to Y
-		bool _inst_TAY();
+        /// Transfer accumulator to Y
+        bool _inst_TAY();
 
-		/// Transfer stack pointer to X
-		bool _inst_TSX();
+        /// Transfer stack pointer to X
+        bool _inst_TSX();
 
-		/// Transfer X to accumulator
-		bool _inst_TXA();
+        /// Transfer X to accumulator
+        bool _inst_TXA();
 
-		/// Transfer X to stack pointer
-		bool _inst_TXS();
+        /// Transfer X to stack pointer
+        bool _inst_TXS();
 
-		/// Transfer Y to accumulator
-		bool _inst_TYA();
+        /// Transfer Y to accumulator
+        bool _inst_TYA();
 
 
     // operations ------------------------------------------------------------------------------------------------------
     private:
 
         typedef struct _Operation {
-			byte   code;
+            byte   code;
             char   abbr[4];
             bool  (CPU::*inst)();
             bool  (CPU::*addr)();
@@ -463,7 +463,7 @@ namespace rt_6502_emulator {
 
         Operation _operations[256];
 
-		void _initOperations();
+        void _initOperations();
     };
 }
 
