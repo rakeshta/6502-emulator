@@ -160,6 +160,26 @@ namespace rt_6502_emulator {
         /// @note The word is read in little endian format
         word _readNextWord();
 
+        /// Convenience function to push a byte to the top of the stack.
+        ///
+        /// @param the data byte to push
+        void _pushByte(byte data);
+
+        /// Convenience function to push a word to the top of the stack. The MSB is pushed first.
+        ///
+        /// @param the data word to push
+        void _pushWord(word data);
+
+        /// Convenience function to pop a byte from the stack.
+        ///
+        /// @param the data byte to pop
+        byte _popByte();
+
+        /// Convenience function to pop a word from the stack. The MSB is popped second.
+        ///
+        /// @param the data word to pop
+        word _popWord();
+
 
     // addressing modes ------------------------------------------------------------------------------------------------
     private:

@@ -148,6 +148,28 @@ namespace rt_6502_emulator {
         return (msb << 8) | lsb;
     }
 
+    void CPU::_pushByte(byte data) {
+        _write(0x0100 & _stackP, data);
+        _stackP--;
+    }
+
+    void CPU::_pushWord(word data) {
+        _pushByte((data >> 8) & 0xFF);
+        _pushByte(data & 0xFF);
+    }
+
+    byte CPU::_popByte() {
+        byte data = _read(0x0100 & _stackP);
+        _stackP++;
+        return data;
+    }
+
+    word CPU::_popWord() {
+        word data = _popByte();
+        data |= _popByte() << 8;
+        return data;
+    }
+
 
     // addressing modes ------------------------------------------------------------------------------------------------
 
