@@ -424,6 +424,16 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_BIT() {
+
+		/* This instruction sets the negative & overflow flags to 7th & 6th bits respectively of the operand and
+		 * the zero flag based on the AND of accumulator and operand.
+		 */
+
+		byte data = _fetch();
+		_setStatusFlag(STATUS_FLAG_NEGATIVE, data & 0b10000000);
+		_setStatusFlag(STATUS_FLAG_OVERFLOW, data & 0b01000000);
+		_setStatusFlag(STATUS_FLAG_ZERO,    (data & _acc) == 0x00);
+
 		return false;
     }
 
