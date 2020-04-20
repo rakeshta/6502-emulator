@@ -165,9 +165,7 @@ namespace rt_6502_emulator {
     }
 
     word CPU::_popWord() {
-        word data = _popByte();
-        data |= _popByte() << 8;
-        return data;
+        return _popByte() | word(_popByte()) << 8;
     }
 
 
@@ -499,6 +497,20 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_BRK() {
+
+        // skip padding byte
+        _pc++;
+
+        // push return address & status (with BREAK status set) on the stack
+        _pushWord(_pc);
+        _pushByte(_status & STATUS_FLAG_BREAK);
+
+        // disable interrupts until return (RTI)
+        _setStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS, true);
+
+        // jump to interrupt handler address
+        _pc = _read(0xFFFE) | word(_read(0xFFFF)) << 8;
+
         return false;
     }
 
