@@ -515,12 +515,29 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_BVC() {
-        return false;
+
+        // no branching if overflow set
+        if (_getStatusFlag(STATUS_FLAG_OVERFLOW)) {
+            return false;
+        }
+
+        // similar to other branch instructions. see BCC
+        _pc = _opAddress;
+        _opCycles++;
+        return true;
     }
 
     bool CPU::_inst_BVS() {
-        return false;
-    }
+
+        // no branching if overflow clear
+        if (_getStatusFlag(STATUS_FLAG_OVERFLOW) == false) {
+            return false;
+        }
+
+        // similar to other branch instructions. see BCC
+        _pc = _opAddress;
+        _opCycles++;
+        return true;    }
 
     bool CPU::_inst_CLC() {
         return false;
