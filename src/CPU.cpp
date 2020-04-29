@@ -540,14 +540,17 @@ namespace rt_6502_emulator {
         return true;    }
 
     bool CPU::_inst_CLC() {
+        _setStatusFlag(STATUS_FLAG_CARRY, false);
         return false;
     }
 
     bool CPU::_inst_CLD() {
+        _setStatusFlag(STATUS_FLAG_DECIMAL, false);
         return false;
     }
 
     bool CPU::_inst_CLI() {
+        _setStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS, false);
         return false;
     }
 
