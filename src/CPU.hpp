@@ -184,7 +184,11 @@ namespace rt_6502_emulator {
     // addressing modes ------------------------------------------------------------------------------------------------
     private:
 
+        /// Convenience function to fetch the operand based on the executing instruction's addressing mode.
         byte _fetch();
+
+        /// Convenience function to store result based on the executing instruction's addressing mode.
+        void _store(byte data);
 
         /// Implied - The source / destination of the operand is implied in the instruction itself.
         bool _addr_IMP();

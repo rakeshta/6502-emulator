@@ -177,6 +177,15 @@ namespace rt_6502_emulator {
             : _read(_opAddress);
     }
 
+    void CPU::_store(byte data) {
+        if (_opTargetAcc) {
+            _acc = data;
+        }
+        else {
+            _write(_opAddress, data);
+        }
+    }
+
     bool CPU::_addr_IMP() {
         return false;
     }
@@ -385,20 +394,9 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_ASL() {
-
-        // left shift fetched data & set result flags
-        word data  = word(_fetch()) << 1;
+        word data = word(_fetch()) << 1;
         _setResultStatusFlags(data);
-
-        // store result based on addressing mode
-        if (_opTargetAcc) {
-            _acc   = data;
-        }
-        else {
-            _write(_opAddress, data);
-        }
-
-        // no extra cycles needed
+        _store(data);
         return false;
     }
 
@@ -584,14 +582,21 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_DEC() {
+        byte data = _fetch() - 1;
+        _setResultStatusFlags(data);
+        _store(data);
         return false;
     }
 
     bool CPU::_inst_DEX() {
+        _idx--;
+        _setResultStatusFlags(_idx);
         return false;
     }
 
     bool CPU::_inst_DEY() {
+        _idy--;
+        _setResultStatusFlags(_idy);
         return false;
     }
 
