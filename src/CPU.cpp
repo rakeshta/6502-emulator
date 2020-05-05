@@ -626,10 +626,13 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_JMP() {
+        _pc = _opAddress;
         return false;
     }
 
     bool CPU::_inst_JSR() {
+        _pushWord(_pc - 1);
+        _pc = _opAddress;
         return false;
     }
 
