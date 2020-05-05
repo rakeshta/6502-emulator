@@ -607,14 +607,21 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_INC() {
+        byte data = _fetch() + 1;
+        _setResultStatusFlags(data);
+        _store(data);
         return false;
     }
 
     bool CPU::_inst_INX() {
+        _idx++;
+        _setResultStatusFlags(_idx);
         return false;
     }
 
     bool CPU::_inst_INY() {
+        _idy++;
+        _setResultStatusFlags(_idy);
         return false;
     }
 
