@@ -357,7 +357,7 @@ namespace rt_6502_emulator {
 
         // add fetched data with accumulator & carry bit
         byte data = _fetch();
-        word res  = _acc + data + (_getStatusFlag(STATUS_FLAG_CARRY) ? 0x01 : 0x00);
+        word res  = word(_acc) + word(data) + (_getStatusFlag(STATUS_FLAG_CARRY) ? 0x01 : 0x00);
 
         // set status flags for result
         _setStatusFlag(STATUS_FLAG_CARRY, res > 0xFF);
@@ -387,7 +387,7 @@ namespace rt_6502_emulator {
     bool CPU::_inst_ASL() {
 
         // left shift fetched data & set result flags
-        word data  = (word)_fetch() << 1;
+        word data  = word(_fetch()) << 1;
         _setResultStatusFlags(data);
 
         // store result based on addressing mode
@@ -555,18 +555,31 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_CLV() {
+        _setStatusFlag(STATUS_FLAG_OVERFLOW, false);
         return false;
     }
 
     bool CPU::_inst_CMP() {
-        return false;
+        byte data = _fetch();
+        word res  = word(_acc) - word(data);
+        _setStatusFlag(STATUS_FLAG_CARRY, _acc > data);
+        _setResultStatusFlags(res);
+        return true;
     }
 
     bool CPU::_inst_CPX() {
+        byte data = _fetch();
+        word res  = word(_idx) - word(data);
+        _setStatusFlag(STATUS_FLAG_CARRY, _idx > data);
+        _setResultStatusFlags(res);
         return false;
     }
 
     bool CPU::_inst_CPY() {
+        byte data = _fetch();
+        word res  = word(_idy) - word(data);
+        _setStatusFlag(STATUS_FLAG_CARRY, _idy > data);
+        _setResultStatusFlags(res);
         return false;
     }
 
