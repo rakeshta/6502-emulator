@@ -674,18 +674,23 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_PHA() {
+        _pushByte(_acc);
         return false;
     }
 
     bool CPU::_inst_PHP() {
+        _pushByte(_status | STATUS_FLAG_BREAK);
         return false;
     }
 
     bool CPU::_inst_PLA() {
+        _acc = _popByte();
+        _setResultStatusFlags(_acc);
         return false;
     }
 
     bool CPU::_inst_PLP() {
+        _status = _popByte() & (~STATUS_FLAG_UNUSED);
         return false;
     }
 
