@@ -601,7 +601,9 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_EOR() {
-        return false;
+        _acc ^= _fetch();
+        _setResultStatusFlags(_acc);
+        return true;
     }
 
     bool CPU::_inst_INC() {
