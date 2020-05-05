@@ -690,7 +690,7 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_PLP() {
-        _status = _popByte() & (~STATUS_FLAG_UNUSED);
+        _status = _popByte();
         return false;
     }
 
@@ -713,10 +713,13 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_RTI() {
+        _status = _popByte() & ~STATUS_FLAG_BREAK;
+        _pc     = _popWord();
         return false;
     }
 
     bool CPU::_inst_RTS() {
+        _pc = _popWord();
         return false;
     }
 
