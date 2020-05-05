@@ -655,6 +655,11 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_LSR() {
+        byte data = _fetch();
+        _setStatusFlag(STATUS_FLAG_CARRY, data & 0x01);
+        data = data >> 1;
+        _setResultStatusFlags(data);
+        _store(data);
         return false;
     }
 
