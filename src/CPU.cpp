@@ -108,7 +108,7 @@ namespace rt_6502_emulator {
     // status register helpers -----------------------------------------------------------------------------------------
 
     bool CPU::_getStatusFlag(STATUS_FLAG bit) {
-        return (_status & bit) > 0 ? true : false;
+        return (_status & bit) > 0 ? 1 : 0;
     }
 
     void CPU::_setStatusFlag(STATUS_FLAG bit, bool value) {
@@ -695,10 +695,20 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_ROL() {
+        byte data = _fetch();
+        byte res  = (data << 1) | _getStatusFlag(STATUS_FLAG_CARRY);
+        _setStatusFlag(STATUS_FLAG_CARRY, data & 0x80);
+        _setResultStatusFlags(res);
+        _store(res);
         return false;
     }
 
     bool CPU::_inst_ROR() {
+        byte data = _fetch();
+        byte res  = (data >> 1) | (_getStatusFlag(STATUS_FLAG_CARRY) << 7);
+        _setStatusFlag(STATUS_FLAG_CARRY, data & 0x01);
+        _setResultStatusFlags(res);
+        _store(res);
         return false;
     }
 
