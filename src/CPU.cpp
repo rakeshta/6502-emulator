@@ -739,14 +739,17 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_SEC() {
+        _setStatusFlag(STATUS_FLAG_CARRY, true);
         return false;
     }
 
     bool CPU::_inst_SED() {
+        _setStatusFlag(STATUS_FLAG_DECIMAL, true);
         return false;
     }
 
     bool CPU::_inst_SEI() {
+        _setStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS, true);
         return false;
     }
 
