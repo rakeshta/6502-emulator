@@ -781,18 +781,25 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_TSX() {
+        _idx = _stackP;
+        _setResultStatusFlags(_idx);
         return false;
     }
 
     bool CPU::_inst_TXA() {
+        _acc = _idx;
+        _setResultStatusFlags(_acc);
         return false;
     }
 
     bool CPU::_inst_TXS() {
+        _stackP = _idx;
         return false;
     }
 
     bool CPU::_inst_TYA() {
+        _acc = _idy;
+        _setResultStatusFlags(_acc);
         return false;
     }
 
