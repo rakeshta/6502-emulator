@@ -769,10 +769,14 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_TAX() {
+        _idx = _acc;
+        _setResultStatusFlags(_idx);
         return false;
     }
 
     bool CPU::_inst_TAY() {
+        _idy = _acc;
+        _setResultStatusFlags(_idy);
         return false;
     }
 
