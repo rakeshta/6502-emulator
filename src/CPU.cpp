@@ -754,14 +754,17 @@ namespace rt_6502_emulator {
     }
 
     bool CPU::_inst_STA() {
+        _store(_acc);
         return false;
     }
 
     bool CPU::_inst_STX() {
+        _store(_idx);
         return false;
     }
 
     bool CPU::_inst_STY() {
+        _store(_idy);
         return false;
     }
 
