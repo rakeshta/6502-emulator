@@ -81,7 +81,25 @@ namespace rt_6502_emulator {
         /// - The vector at address 0xFFFC & 0xFFFD is loaded into the program counter
         void reset();
 
+        /// Triggers a maskable interrupt if `DISABLE_INTERRUPTS` status bit is not set.
+        ///
+        /// Triggering an interrupt causes:
+        /// - The program counter & status to be pushed on the stack.
+        /// - The status bit `DISABLE_INTERRUPTS` to be set.
+        /// - The address at vector 0xFFFE, 0xFFFF to be loaded onto the program counter.
+        void irq();
+
+        /// Triggers a non-maskable interrupt.
+        ///
+        /// A non-maskable interrupt is similar to a maskable interrupt except for the following:
+        /// - The `DISABLE_INTERRUPTS` status bit does not apply to a non-maskable interrupt.
+        /// - The address vector loaded onto the program counter is at 0xFFFA, 0xFFFB.
+        void nmi();
+
         /// Performs one clocks worth of operations.
+        ///
+        /// Since this is a behavior level emulation, the entire instruction is executed in one clock tick. The
+        /// remaining ticks required for the current instruction to complete just cause the emulator to wait.
         void tick();
 
         /// Executes one instruction before returning. This is useful for debugging and stepping through the program.

@@ -48,9 +48,7 @@ namespace rt_6502_emulator {
         _status      = STATUS_FLAG_UNUSED;
 
         // read program start address from 0xFFFC to initialize the program counter
-        word lsb     = _read(0xFFFC);
-        word msb     = _read(0xFFFD);
-        _pc          = (msb << 8) | lsb;
+        _pc          = word(_read(0xFFFC)) | (word(0xFFFD) << 8);
 
         // reset current op addressing
         _opTargetAcc = false;
@@ -58,6 +56,45 @@ namespace rt_6502_emulator {
 
         // reset takes 8 clock cycles
         _opCycles    = 8;
+    }
+
+    void CPU::irq() {
+        // TODO: What happens if IRQ is triggered in between the execution of an instruction
+
+        // ignore if interrupts disabled
+        if (_getStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS)) {
+            return;
+        }
+
+        // push program counter & status on the stack
+        _pushWord(_pc);
+        _pushWord(_status);
+
+        // disable interrupts
+        _setStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS, true);
+
+        // load vector oxFFFE, oxFFFF onto the program counter
+        _pc = word(_read(0xFFFE)) | (word(0xFFFF) << 8);
+
+        // consume 7 cycles for irq
+        _opCycles = 7;
+    }
+
+    void CPU::nmi() {
+        // TODO: What happens if IRQ is triggered in between the execution of an instruction
+
+        // push program counter & status on the stack
+        _pushWord(_pc);
+        _pushWord(_status);
+
+        // disable interrupts
+        _setStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS, true);
+
+        // load vector oxFFFA, oxFFFB onto the program counter
+        _pc = word(_read(0xFFFA)) | (word(0xFFFB) << 8);
+
+        // consume 8 cycles for nmi
+        _opCycles = 8;
     }
 
     void CPU::tick() {
