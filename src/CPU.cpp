@@ -81,6 +81,9 @@ namespace rt_6502_emulator {
                 _execute();
             }
 
+            // reset interrupt request
+            _interruptType = INTERRUPT_TYPE_NONE;
+
             // ensure unused flag is always set in the status register
             _setStatusFlag(STATUS_FLAG_UNUSED, true);
         }
@@ -106,6 +109,8 @@ namespace rt_6502_emulator {
     bool CPU::_isInterruptRequested() {
         switch (_interruptType) {
         case INTERRUPT_TYPE_MASKABLE:
+            return _getStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS) == false;
+
         case INTERRUPT_TYPE_NON_MASKABLE:
             return true;
 
@@ -116,33 +121,11 @@ namespace rt_6502_emulator {
 
     void CPU::_interrupt() {
 
-        // clear interrupt type before handling or aborting
-        byte type      = _interruptType;
-        _interruptType = INTERRUPT_TYPE_NONE;
-
         // decode interrupt request
         word vector;
-        byte cycles;
-        switch (type) {
-        case INTERRUPT_TYPE_MASKABLE:
-
-            // abort if masked
-            if (_getStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS)) {
-                break;
-            }
-
-            // load handler address from 0xFFFE, 0xFFFF. interrupt consumes 7 clock cycles.
-            vector = 0xFFFE;
-            cycles = 7;
-            break;
-
-        case INTERRUPT_TYPE_NON_MASKABLE:
-
-            // load handler address from 0xFFFA, 0xFFFB. interrupt consumes 8 clock cycles.
-            vector = 0xFFFA;
-            cycles = 8;
-            break;
-
+        switch (_interruptType) {
+        case INTERRUPT_TYPE_MASKABLE:     vector = 0xFFFE; _opCycles = 7; break;
+        case INTERRUPT_TYPE_NON_MASKABLE: vector = 0xFFFA; _opCycles = 8; break;
         case INTERRUPT_TYPE_NONE:
         default:
             return;
@@ -156,9 +139,8 @@ namespace rt_6502_emulator {
         // disable interrupts
         _setStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS, true);
 
-        // load handler address & set number of cycles consumed
-        _pc       = word(_read(vector)) | (word(_read(vector + 1)) << 8);
-        _opCycles = cycles;
+        // load handler address
+        _pc = word(_read(vector)) | (word(_read(vector + 1)) << 8);
     }
 
     void CPU::_execute() {
