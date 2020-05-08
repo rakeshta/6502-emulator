@@ -45,7 +45,7 @@ namespace rt_6502_emulator {
         _idx           = 0x00;
         _idy           = 0x00;
         _stackP        = 0x00;
-        _status        = STATUS_FLAG_UNUSED;
+        _status        = STATUS_FLAG_UNUSED | STATUS_FLAG_DISABLE_INTERRUPTS;
         _interruptType = INTERRUPT_TYPE_NONE;
 
         // read program start address from 0xFFFC to initialize the program counter
