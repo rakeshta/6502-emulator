@@ -41,85 +41,44 @@ namespace rt_6502_emulator {
     void CPU::reset() {
 
         // reset registers
-        _acc         = 0x00;
-        _idx         = 0x00;
-        _idy         = 0x00;
-        _stackP      = 0x00;
-        _status      = STATUS_FLAG_UNUSED;
+        _acc           = 0x00;
+        _idx           = 0x00;
+        _idy           = 0x00;
+        _stackP        = 0x00;
+        _status        = STATUS_FLAG_UNUSED;
+        _interruptType = INTERRUPT_TYPE_NONE;
 
         // read program start address from 0xFFFC to initialize the program counter
-        _pc          = word(_read(0xFFFC)) | (word(0xFFFD) << 8);
+        _pc            = word(_read(0xFFFC)) | (word(_read(0xFFFD)) << 8);
 
         // reset current op addressing
-        _opTargetAcc = false;
-        _opAddress   = 0x0000;
+        _opTargetAcc   = false;
+        _opAddress     = 0x0000;
 
         // reset takes 8 clock cycles
-        _opCycles    = 8;
+        _opCycles      = 8;
     }
 
     void CPU::irq() {
-        // TODO: What happens if IRQ is triggered in between the execution of an instruction
-
-        // ignore if interrupts disabled
-        if (_getStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS)) {
-            return;
-        }
-
-        // push program counter & status on the stack
-        _pushWord(_pc);
-        _pushWord(_status);
-
-        // disable interrupts
-        _setStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS, true);
-
-        // load vector oxFFFE, oxFFFF onto the program counter
-        _pc = word(_read(0xFFFE)) | (word(0xFFFF) << 8);
-
-        // consume 7 cycles for irq
-        _opCycles = 7;
+        _interruptType = INTERRUPT_TYPE_MASKABLE;
     }
 
     void CPU::nmi() {
-        // TODO: What happens if IRQ is triggered in between the execution of an instruction
-
-        // push program counter & status on the stack
-        _pushWord(_pc);
-        _pushWord(_status);
-
-        // disable interrupts
-        _setStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS, true);
-
-        // load vector oxFFFA, oxFFFB onto the program counter
-        _pc = word(_read(0xFFFA)) | (word(0xFFFB) << 8);
-
-        // consume 8 cycles for nmi
-        _opCycles = 8;
+        _interruptType = INTERRUPT_TYPE_NON_MASKABLE;
     }
 
     void CPU::tick() {
 
-        // execute next instruction if the clock ticks required for the previous instruction have elapsed.
+        // execute next instruction or interrupt request if the clock ticks
+        // required for the previous instruction have elapsed.
         if (_opCycles == 0) {
 
-            // read next operation
-            byte opcode = _readNextByte();
-            CPU::Operation op = _operations[opcode];
-
-            // set the number of cycles required for the op
-            _opCycles = op.cycles;
-
-            // reset addressing state
-            _opTargetAcc  = false;
-            _opAddress    = 0x0000;
-
-            // execute the operation
-            // require an extra cycle if both the addressing & instruction ask for it
-            bool extraCycleAddr = (this->*op.addr)();
-            bool extraCycleInst = (this->*op.inst)();
-
-            if (extraCycleAddr && extraCycleInst) {
-                _opCycles++;
+            // execute interrupt request or instruction
+            if (_isInterruptRequested()) {
+                _interrupt();
+            }
+            else {
+                _execute();
             }
 
             // ensure unused flag is always set in the status register
@@ -139,6 +98,90 @@ namespace rt_6502_emulator {
             count++;
         } while(_opCycles > 0);
         return count;
+    }
+
+
+    // execution helpers -----------------------------------------------------------------------------------------------
+
+    bool CPU::_isInterruptRequested() {
+        switch (_interruptType) {
+        case INTERRUPT_TYPE_MASKABLE:
+        case INTERRUPT_TYPE_NON_MASKABLE:
+            return true;
+
+        default:
+            return false;
+        }
+    }
+
+    void CPU::_interrupt() {
+
+        // clear interrupt type before handling or aborting
+        byte type      = _interruptType;
+        _interruptType = INTERRUPT_TYPE_NONE;
+
+        // decode interrupt request
+        word vector;
+        byte cycles;
+        switch (type) {
+        case INTERRUPT_TYPE_MASKABLE:
+
+            // abort if masked
+            if (_getStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS)) {
+                break;
+            }
+
+            // load handler address from 0xFFFE, 0xFFFF. interrupt consumes 7 clock cycles.
+            vector = 0xFFFE;
+            cycles = 7;
+            break;
+
+        case INTERRUPT_TYPE_NON_MASKABLE:
+
+            // load handler address from 0xFFFA, 0xFFFB. interrupt consumes 8 clock cycles.
+            vector = 0xFFFA;
+            cycles = 8;
+            break;
+
+        case INTERRUPT_TYPE_NONE:
+        default:
+            return;
+        }
+
+
+        // push program counter & status on the stack
+        _pushWord(_pc);
+        _pushWord(_status);
+
+        // disable interrupts
+        _setStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS, true);
+
+        // load handler address & set number of cycles consumed
+        _pc       = word(_read(vector)) | (word(_read(vector + 1)) << 8);
+        _opCycles = cycles;
+    }
+
+    void CPU::_execute() {
+
+        // read next operation
+        byte opcode = _readNextByte();
+        CPU::Operation op = _operations[opcode];
+
+        // set the number of cycles required for the op
+        _opCycles = op.cycles;
+
+        // reset addressing state
+        _opTargetAcc  = false;
+        _opAddress    = 0x0000;
+
+        // execute the operation
+        // require an extra cycle if both the addressing & instruction ask for it
+        bool extraCycleAddr = (this->*op.addr)();
+        bool extraCycleInst = (this->*op.inst)();
+
+        if (extraCycleAddr && extraCycleInst) {
+            _opCycles++;
+        }
     }
 
 
@@ -544,7 +587,7 @@ namespace rt_6502_emulator {
         _setStatusFlag(STATUS_FLAG_DISABLE_INTERRUPTS, true);
 
         // jump to interrupt handler address
-        _pc = _read(0xFFFE) | word(_read(0xFFFF)) << 8;
+        _pc = word(_read(0xFFFE)) | word(_read(0xFFFF)) << 8;
 
         return false;
     }

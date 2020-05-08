@@ -38,6 +38,13 @@ namespace rt_6502_emulator {
             STATUS_FLAG_NEGATIVE           = (1 << 7),
         };
 
+        /// Interrupt type. Used to indicate the last requested interrupt type.
+        enum INTERRUPT_TYPE {
+            INTERRUPT_TYPE_NONE,
+            INTERRUPT_TYPE_MASKABLE,
+            INTERRUPT_TYPE_NON_MASKABLE,
+        };
+
 
     // accessors -------------------------------------------------------------------------------------------------------
     public:
@@ -123,6 +130,23 @@ namespace rt_6502_emulator {
 
         bool   _opTargetAcc;    // set to true by the addressing mode if the target is the accumulator
         word   _opAddress;      // target address computed by the addressing mode of the active operation
+
+        byte   _interruptType;  // tracks the last requested interrupt type
+
+
+    // execution helpers -----------------------------------------------------------------------------------------------
+    private:
+
+        /// Tests if any interrupt has been requested.
+        ///
+        /// @returns `true` if a pending request exists.
+        bool _isInterruptRequested();
+
+        /// Executes interrupt request if any.
+        void _interrupt();
+
+        /// Executes the next operation in the program.
+        void _execute();
 
 
     // status register helpers -----------------------------------------------------------------------------------------
