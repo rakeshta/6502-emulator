@@ -7,6 +7,9 @@
 //
 
 import { app, BrowserWindow } from 'electron';
+import installExtension, {
+    REACT_DEVELOPER_TOOLS,
+}                             from 'electron-devtools-installer';
 import contextMenu            from 'electron-context-menu';
 import windowStateKeeper      from 'electron-window-state';
 import isDev                  from 'electron-is-dev';
@@ -47,9 +50,10 @@ app.on('ready', () => {
     // load index.html
     win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-    // open dev-tools in dev-env
+    // open dev-tools in dev-env & install extensions
     if (isDev) {
         win.webContents.openDevTools();
+        installExtension(REACT_DEVELOPER_TOOLS);
     }
 });
 
