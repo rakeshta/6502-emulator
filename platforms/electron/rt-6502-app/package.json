@@ -52,7 +52,7 @@
               "entryPoints": [
                 {
                   "html": "./src/index.html",
-                  "js": "./src/index.ts",
+                  "js": "./src/index.tsx",
                   "name": "main_window"
                 }
               ]
@@ -72,6 +72,9 @@
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
     "@types/electron-is-dev": "^1.1.1",
     "@types/electron-window-state": "^2.0.33",
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.8",
+    "@types/webpack-env": "^1.15.2",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "css-loader": "^3.5.3",
@@ -88,6 +91,8 @@
     "electron-context-menu": "^2.0.0",
     "electron-is-dev": "^1.2.0",
     "electron-squirrel-startup": "^1.0.0",
-    "electron-window-state": "^5.0.3"
+    "electron-window-state": "^5.0.3",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   }
 }
