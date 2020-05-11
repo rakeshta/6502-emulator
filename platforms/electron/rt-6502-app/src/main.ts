@@ -3,7 +3,7 @@
 //  6502-emulator
 //
 //  Created by Rakesh Ayyaswami on 11 May 2020.
-//  Copyright (c) 2020 Pixxa LLC. All rights reserved.
+//  Copyright (c) 2020 Raptor Soft. All rights reserved.
 //
 
 import { app, BrowserWindow } from 'electron';
@@ -12,7 +12,7 @@ import windowStateKeeper      from 'electron-window-state';
 import isDev                  from 'electron-is-dev';
 
 
-declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
+declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.

@@ -3,16 +3,18 @@
 //  6502-emulator
 //
 //  Created by Rakesh Ayyaswami on 11 May 2020.
-//  Copyright (c) 2020 Pixxa LLC. All rights reserved.
+//  Copyright (c) 2020 Raptor Soft. All rights reserved.
 //
 
-import React            from 'react';
-import ReactDOM         from 'react-dom';
+import React      from 'react';
+import ReactDOM   from 'react-dom';
+
+import App        from './App';
 
 import './index.css';
 
 
-ReactDOM.render(<h1>Hello Electron React</h1>, document.getElementById('__app'));
+ReactDOM.render(<App/>, document.getElementById('__app'));
 
 if (module.hot) {
     module.hot.accept();

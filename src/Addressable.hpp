@@ -3,7 +3,7 @@
 //  6502-emulator
 //
 //  Created by Rakesh Ayyaswami on 01 Apr 2020.
-//  Copyright (c) 2020 Pixxa LLC. All rights reserved.
+//  Copyright (c) 2020 Raptor Soft. All rights reserved.
 //
 
 #ifndef __RT_6502_EMULATOR_ADDRESSABLE_HPP__
