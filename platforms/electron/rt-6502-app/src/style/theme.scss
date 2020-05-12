@@ -1,0 +1,17 @@
+//
+//  theme.scss
+//  6502-emulator
+//
+//  Created by Rakesh Ayyaswami on 12 May 2020.
+//  Copyright (c) 2020 Raptor Soft. All rights reserved.
+//
+
+:root {
+    --color-primary:   #{$theme-color-primary};
+    --bg-primary:      #{$theme-background-primary};
+    --bg-secondary:    #{$theme-background-secondary};
+    --fg-primary:      #{$theme-foreground-primary};
+    --fg-secondary:    #{$theme-foreground-secondary};
+    --fg-muted:        #{$theme-foreground-muted};
+    --fg-ghost:        #{$theme-foreground-ghost};
+}
