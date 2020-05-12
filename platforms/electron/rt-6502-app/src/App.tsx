@@ -6,11 +6,16 @@
 //  Copyright (c) 2020 Raptor Soft. All rights reserved.
 //
 
-import React   from 'react';
+import React     from 'react';
+
+import TitleBar  from './components/layout/TitleBar';
 
 
 const App = React.memo(() => (
-    <h1>Hello React Electron App</h1>
+    <React.Fragment>
+        <TitleBar title='RT 6502 Emulator'/>
+        <h1>Hello React Electron App</h1>
+    </React.Fragment>
 ));
 
 App.displayName = 'App';

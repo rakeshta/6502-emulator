@@ -14,6 +14,8 @@ import contextMenu            from 'electron-context-menu';
 import windowStateKeeper      from 'electron-window-state';
 import isDev                  from 'electron-is-dev';
 
+import { background }         from './style/theme';
+
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
@@ -36,12 +38,15 @@ app.on('ready', () => {
 
     // create the browser window
     const win = new BrowserWindow({
-        x:         windowState.x,
-        y:         windowState.y,
-        width:     windowState.width,
-        height:    windowState.height,
-        minWidth:  1024,
-        minHeight: 768,
+        x:                     windowState.x,
+        y:                     windowState.y,
+        width:                 windowState.width,
+        height:                windowState.height,
+        minWidth:              1024,
+        minHeight:             768,
+        titleBarStyle:        'hidden',
+        trafficLightPosition: {x: 7, y: 12},
+        backgroundColor:       background.primary,
     });
 
     // let window state manager listen to window size changes

@@ -11,7 +11,7 @@ import ReactDOM   from 'react-dom';
 
 import App        from './App';
 
-import './style/root.scss';
+import './index.scss';
 
 
 ReactDOM.render(<App/>, document.getElementById('__app'));
