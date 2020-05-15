@@ -4,7 +4,7 @@
 			"path": "."
 		},
 		{
-			"path": "platforms/electron/rt-6502-app"
+			"path": "platforms/electron/6502-app"
 		}
 	]
 }
