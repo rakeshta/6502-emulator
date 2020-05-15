@@ -1,0 +1,18 @@
+//
+//  Editor.scss
+//  6502-emulator
+//
+//  Created by Rakesh Ayyaswami on 15 May 2020.
+//  Copyright (c) 2020 Raptor Soft. All rights reserved.
+//
+
+.tab-editor {
+    width: 100%;
+    height: 100%;
+
+    .monaco-container {
+        width: 100%;
+        height: 100%;
+        background-color: red;
+    }
+}

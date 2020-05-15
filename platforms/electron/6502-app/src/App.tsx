@@ -8,17 +8,13 @@
 
 import React     from 'react';
 
-import TitleBar  from './components/layout/TitleBar';
 import AppFrame  from './components/layout/AppFrame';
+import Editor    from './editor/Editor';
 
 
 const App = React.memo(() => (
     <AppFrame>
-        <TitleBar title='RT 6502 Emulator'/>
-        <div className='m-3'>
-            <h1>Hello React Electron App</h1>
-            <button className='btn btn-primary'>Click Me</button>
-        </div>
+        <Editor/>
     </AppFrame>
 ));
 

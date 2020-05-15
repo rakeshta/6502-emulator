@@ -8,6 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const MonacoWebpackPlugin        = require('monaco-editor-webpack-plugin');
 const rules                      = require('./webpack.rules');
 
 const { toSass }                 = require('./src/style/theme');
@@ -37,6 +38,7 @@ module.exports = {
     },
     plugins: [
         new ForkTsCheckerWebpackPlugin({async: false}),
+        new MonacoWebpackPlugin(),
     ],
     resolve: {
         extensions: ['.js', '.ts', '.jsx', '.tsx', '.css']
