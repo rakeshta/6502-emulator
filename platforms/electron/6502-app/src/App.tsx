@@ -9,13 +9,17 @@
 import React     from 'react';
 
 import TitleBar  from './components/layout/TitleBar';
+import AppFrame  from './components/layout/AppFrame';
 
 
 const App = React.memo(() => (
-    <React.Fragment>
+    <AppFrame>
         <TitleBar title='RT 6502 Emulator'/>
-        <h1>Hello React Electron App</h1>
-    </React.Fragment>
+        <div className='m-3'>
+            <h1>Hello React Electron App</h1>
+            <button className='btn btn-primary'>Click Me</button>
+        </div>
+    </AppFrame>
 ));
 
 App.displayName = 'App';

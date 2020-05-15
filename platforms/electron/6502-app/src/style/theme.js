@@ -16,8 +16,9 @@ const theme = {
         primary:   '#A30B37',
     },
     background: {
-        primary:   '#0F1A20',
-        secondary: '#2E2532',
+        chrome:    '#0F1A20',
+        primary:   '#1E282D',
+        secondary: '#272C33',
     },
     foreground: {
         primary:   '#FAF8FC',

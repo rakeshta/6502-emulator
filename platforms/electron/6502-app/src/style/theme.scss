@@ -6,12 +6,70 @@
 //  Copyright (c) 2020 Raptor Soft. All rights reserved.
 //
 
+// theme variable short-forms ------------------------------------------------------------------------------------------
+
+$color-primary:  $theme-color-primary;
+
+$bg-chrome:      $theme-background-chrome;
+$bg-primary:     $theme-background-primary;
+$bg-secondary:   $theme-background-secondary;
+
+$fg-primary:     $theme-foreground-primary;
+$fg-secondary:   $theme-foreground-secondary;
+$fg-muted:       $theme-foreground-muted;
+$fg-ghost:       $theme-foreground-ghost;
+
+
+// bootstrap customization ---------------------------------------------------------------------------------------------
+
+$theme-colors: (
+    "primary": $color-primary,
+);
+
+$body-bg:      $bg-chrome;
+$body-color:   $fg-primary;
+
+
+// Navs
+
+$nav-link-padding-y:                 0.3rem;
+$nav-tabs-border-color:              $fg-ghost;
+$nav-tabs-link-hover-border-color:   $fg-ghost $fg-ghost $nav-tabs-border-color !default;
+$nav-tabs-link-active-color:         $fg-secondary;
+$nav-tabs-link-active-bg:            $bg-primary;
+$nav-tabs-link-active-border-color:  $fg-ghost $fg-ghost $nav-tabs-link-active-bg;
+
+.nav-link {
+    color: $fg-secondary;
+    &:hover {
+        color: $fg-primary;
+    }
+}
+
+
+@import '~bootstrap/scss/bootstrap.scss';
+
+
+// global overrides ----------------------------------------------------------------------------------------------------
+
+// no mickey-mouse-gloves
+a, .btn:not(:disabled):not(.disable), [role='button'] {
+    cursor: default;
+}
+
+// no button outlines
+.btn:focus, .btn:active {
+    box-shadow: none;
+}
+
+// theme color variables -----------------------------------------------------------------------------------------------
+
 :root {
-    --color-primary:   #{$theme-color-primary};
-    --bg-primary:      #{$theme-background-primary};
-    --bg-secondary:    #{$theme-background-secondary};
-    --fg-primary:      #{$theme-foreground-primary};
-    --fg-secondary:    #{$theme-foreground-secondary};
-    --fg-muted:        #{$theme-foreground-muted};
-    --fg-ghost:        #{$theme-foreground-ghost};
+    --color-primary:   #{$color-primary};
+    --bg-primary:      #{$bg-primary};
+    --bg-secondary:    #{$bg-secondary};
+    --fg-primary:      #{$fg-primary};
+    --fg-secondary:    #{$fg-secondary};
+    --fg-muted:        #{$fg-muted};
+    --fg-ghost:        #{$fg-ghost};
 }

@@ -45,8 +45,11 @@ app.on('ready', () => {
         minWidth:              1024,
         minHeight:             768,
         titleBarStyle:        'hidden',
-        trafficLightPosition: {x: 7, y: 12},
-        backgroundColor:       background.primary,
+        trafficLightPosition: {x: 12, y: 31}, // Magic number calculated to match app top-nav layout
+        backgroundColor:       background.chrome,
+        webPreferences:       {
+            nodeIntegration:   true,
+        },
     });
 
     // let window state manager listen to window size changes

@@ -9,10 +9,39 @@
 @import './theme.scss';
 
 
-body {
-    margin: 0;
-    padding: 0;
+// app sizing & layout -------------------------------------------------------------------------------------------------
 
-    background-color: var(--bg-primary);
-    color: var(--fg-primary);
+body {
+    height: 100vh;
+}
+
+#__app {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+
+    // top nav
+
+    --top-nav-spacing-left: 0px;
+    &.platform-darwin {
+        --top-nav-spacing-left: 80px;
+    }
+
+    & > .top-nav {
+        .nav-item:first-child {
+            margin-left: var(--top-nav-spacing-left);
+        }
+    }
+
+
+    // main
+
+    & > main {
+        flex: 1;
+
+        background-color: var(--bg-primary);
+    }
 }

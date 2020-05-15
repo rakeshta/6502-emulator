@@ -14,7 +14,12 @@ import App        from './App';
 import './index.scss';
 
 
-ReactDOM.render(<App/>, document.getElementById('__app'));
+const div = document.getElementById('__app');
+if (div) {
+    div.className = 'platform-' + process.platform;
+}
+
+ReactDOM.render(<App/>, div);
 
 if (module.hot) {
     module.hot.accept();
