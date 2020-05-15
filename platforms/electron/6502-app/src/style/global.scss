@@ -22,8 +22,10 @@ body {
     flex-direction: column;
     align-items: stretch;
 
+    -webkit-app-region: drag;
 
-    // top nav
+
+    // top nav ---------------------------------------------------------------------------------------------------------
 
     --top-nav-spacing-left: 0px;
     &.platform-darwin {
@@ -31,17 +33,22 @@ body {
     }
 
     & > .top-nav {
+
         .nav-item:first-child {
             margin-left: var(--top-nav-spacing-left);
+        }
+
+        .nav-item {
+            -webkit-app-region: no-drag;
         }
     }
 
 
-    // main
+    // main ------------------------------------------------------------------------------------------------------------
 
     & > main {
         flex: 1;
-
         background-color: var(--bg-primary);
+        -webkit-app-region: no-drag;
     }
 }
