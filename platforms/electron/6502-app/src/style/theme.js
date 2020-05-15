@@ -53,7 +53,6 @@ const toSass = () => {
     }
     extract('theme', theme);
 
-    console.log('--debug theme', str);
     return str;
 };
 

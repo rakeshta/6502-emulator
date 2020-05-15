@@ -40,7 +40,7 @@ export default class Editor extends React.PureComponent<Props> {
     public render(): React.ReactNode {
         return (
             <div className='tab-editor'>
-                <div ref={this._monacoContainerRef} className='monaco-container'/>
+                <div ref={this._monacoContainerRef} className='monaco-container mt-1'/>
             </div>
         );
     }
