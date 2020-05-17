@@ -9,6 +9,10 @@
 import React        from 'react';
 import * as monaco  from 'monaco-editor';
 
+import testProg     from './test-prog';
+
+import './assembly6502';
+
 import './Editor.scss';
 
 
@@ -28,8 +32,8 @@ export default class Editor extends React.PureComponent<Props> {
         // mount editor
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         monaco.editor.create(this._monacoContainerRef.current!, {
-            value:    'console.log("Hello World");',
-            language: 'typescript',
+            value:     testProg,
+            language: 'assembly6502',
             theme:    'vs-dark',
         });
     }
