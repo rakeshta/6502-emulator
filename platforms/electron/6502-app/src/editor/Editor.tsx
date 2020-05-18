@@ -22,20 +22,56 @@ export interface Props {
 
 export default class Editor extends React.PureComponent<Props> {
 
-    private _monacoContainerRef = React.createRef<HTMLDivElement>();
+    private _containerRef         = React.createRef<HTMLDivElement>();
+
+    private _editor?:               monaco.editor.IStandaloneCodeEditor;
+
+    private _containerWidthDelta  = 0;
+    private _containerHeightDelta = 0;
 
 
     // lifecycle -------------------------------------------------------------------------------------------------------
 
     public componentDidMount(): void {
 
+        // container should be mounted by now
+        const container = this._containerRef.current;
+        if (!container) { return; }
+
+        // compute initial size delta of container to window. this is used to recompute correct size
+        // when window is resized
+        this._containerWidthDelta  = document.body.clientWidth  - container.clientWidth;
+        this._containerHeightDelta = document.body.clientHeight - container.clientHeight;
+
+        // add window resize listener to allow editor to resize
+        window.addEventListener('resize', this._onWindowResize);
+
         // mount editor
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        monaco.editor.create(this._monacoContainerRef.current!, {
-            value:     testProg,
-            language: 'assembly6502',
-            theme:    'vs-dark',
+        this._editor = monaco.editor.create(container, {
+            value:                 testProg,
+            language:             'assembly6502',
+            theme:                'vs-dark',
+            scrollBeyondLastLine:  false,
         });
+    }
+
+    public componentWillUnmount(): void {
+
+        // remove resize listener
+        window.removeEventListener('resize', this._onWindowResize);
+    }
+
+
+    // events ----------------------------------------------------------------------------------------------------------
+
+    private _onWindowResize = (): void => {
+
+        const container  = this._containerRef.current;
+        if (container && this._editor) {
+            const width  = document.body.clientWidth  - this._containerWidthDelta;
+            const height = document.body.clientHeight - this._containerHeightDelta;
+            this._editor.layout({width, height});
+        }
     }
 
 
@@ -44,7 +80,7 @@ export default class Editor extends React.PureComponent<Props> {
     public render(): React.ReactNode {
         return (
             <div className='tab-editor'>
-                <div ref={this._monacoContainerRef} className='monaco-container mt-1'/>
+                <div ref={this._containerRef} className='monaco-container mt-1'/>
             </div>
         );
     }
