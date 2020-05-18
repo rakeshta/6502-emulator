@@ -13,18 +13,22 @@
 
 const theme = {
     color: {
-        primary:   '#A30B37',
+        primary:      '#A30B37',
     },
     background: {
-        chrome:    '#0F1A20',
-        primary:   '#1E282D',
-        secondary: '#272C33',
+        chrome:       '#0F1A20',
+        primary:      '#1E282D',
+        secondary:    '#272C33',
     },
     foreground: {
-        primary:   '#FAF8FC',
-        secondary: '#CCC9DC',
-        muted:     '#D6D3E3',
-        ghost:     '#525063',
+        primary:      '#FAF8FC',
+        secondary:    '#CCC9DC',
+        muted:        '#D6D3E3',
+        ghost:        '#525063',
+    },
+    editor: {
+        comment:      '#5C6370',
+        instruction:  '#D19A66',
     },
 };
 

@@ -39,7 +39,7 @@ const lang: Assembly6502MonarchLanguage = {
     ],
 
 
-	symbols: /[=><!~?:&|+\-*/^%.#]+/,
+	symbols: /[=><!~?:&|+\-*/^%#]+/,
     operators: [
         '=', '+', '-', '<<', '>>', '~', '&', '|', '#',
     ],

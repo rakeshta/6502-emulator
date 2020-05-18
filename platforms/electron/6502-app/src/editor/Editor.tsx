@@ -9,12 +9,31 @@
 import React        from 'react';
 import * as monaco  from 'monaco-editor';
 
+import theme        from '../style/theme';
+
 import testProg     from './test-prog';
 
 import './assembly6502';
 
 import './Editor.scss';
 
+
+// editor theme --------------------------------------------------------------------------------------------------------
+
+monaco.editor.defineTheme('custom', {
+    base:    'vs-dark',
+    inherit:  true,
+    rules:   [
+        {token: 'comment',     foreground: theme.editor.comment,     fontStyle: 'italic'},
+        {token: 'instruction', foreground: theme.editor.instruction},
+    ],
+    colors:  {
+        'editor.background': theme.background.primary,
+    },
+});
+
+
+// class Editor --------------------------------------------------------------------------------------------------------
 
 export interface Props {
     className?:  string;
@@ -50,7 +69,7 @@ export default class Editor extends React.PureComponent<Props> {
         this._editor = monaco.editor.create(container, {
             value:                 testProg,
             language:             'assembly6502',
-            theme:                'vs-dark',
+            theme:                'custom',
             scrollBeyondLastLine:  false,
         });
     }
@@ -79,8 +98,8 @@ export default class Editor extends React.PureComponent<Props> {
 
     public render(): React.ReactNode {
         return (
-            <div className='tab-editor'>
-                <div ref={this._containerRef} className='monaco-container mt-1'/>
+            <div className='tab-editor py-1'>
+                <div ref={this._containerRef} className='monaco-container'/>
             </div>
         );
     }
