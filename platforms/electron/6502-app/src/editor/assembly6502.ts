@@ -13,7 +13,7 @@ import IMonarchLanguage = monaco.languages.IMonarchLanguage;
 
 // types ---------------------------------------------------------------------------------------------------------------
 
-interface IAssembly6502MonarchLanguage extends IMonarchLanguage {
+interface Assembly6502MonarchLanguage extends IMonarchLanguage {
     id:              string;
     symbols:         RegExp;
     operators:       string[];
@@ -25,7 +25,7 @@ interface IAssembly6502MonarchLanguage extends IMonarchLanguage {
 
 // definition ----------------------------------------------------------------------------------------------------------
 
-const lang: IAssembly6502MonarchLanguage = {
+const lang: Assembly6502MonarchLanguage = {
 
     id:           'assembly6502',
 
@@ -39,7 +39,7 @@ const lang: IAssembly6502MonarchLanguage = {
     ],
 
 
-	symbols: /[=><!~?:&|+\-*\/\^%\.#]+/,
+	symbols: /[=><!~?:&|+\-*/^%.#]+/,
     operators: [
         '=', '+', '-', '<<', '>>', '~', '&', '|', '#',
     ],
@@ -92,7 +92,7 @@ const lang: IAssembly6502MonarchLanguage = {
         ],
 
         bracket: [
-            [/[{}()\[\]]/, '@brackets'],
+            [/[{}()[\]]/, '@brackets'],
         ],
 
         symbol: [
@@ -105,7 +105,7 @@ const lang: IAssembly6502MonarchLanguage = {
         ],
 
         keyword: [
-            [/[\.,]?[a-zA-Z_]\w*/, {cases: {
+            [/[.,]?[a-zA-Z_]\w*/, {cases: {
                 '@keywords':       'keyword',
                 '@instructions':   'instruction',
                 '@exInstructions': 'exInstruction',
