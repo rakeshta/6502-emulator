@@ -6,8 +6,7 @@
 //  Copyright (c) 2020 Raptor Soft. All rights reserved.
 //
 
-export default `
-; http://everything2.com/title/An+example+of+Atari+2600+source+code
+export default `; http://everything2.com/title/An+example+of+Atari+2600+source+code
 ; --------------------------------------------
         processor 6502
 
