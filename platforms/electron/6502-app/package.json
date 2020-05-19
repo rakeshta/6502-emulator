@@ -1,8 +1,8 @@
 {
-    "name": "rt-6502-app",
-    "productName": "rt-6502-app",
+    "name": "6502-app",
+    "productName": "6502-app",
     "version": "1.0.0",
-    "description": "My Electron application description",
+    "description": "6502 Emulator",
     "main": ".webpack/main",
     "scripts": {
         "start": "electron-forge start",
