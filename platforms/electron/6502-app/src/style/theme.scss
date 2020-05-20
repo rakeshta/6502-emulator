@@ -42,6 +42,7 @@ $nav-tabs-link-active-border-color:  $fg-ghost $fg-ghost $nav-tabs-link-active-b
 .nav-link {
     color: $fg-secondary;
     user-select: none;
+    -webkit-user-drag: none;
     &:hover {
         color: $fg-primary;
     }

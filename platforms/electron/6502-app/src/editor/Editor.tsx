@@ -15,7 +15,7 @@ import throttle     from 'lodash/throttle';
 
 import theme        from '../style/theme';
 
-import testProg     from './test-prog';
+import testProg     from '../components/editor/test-prog';
 
 import './assembly6502';
 
