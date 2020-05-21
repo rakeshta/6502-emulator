@@ -9,7 +9,7 @@
 import React      from 'react';
 import ReactDOM   from 'react-dom';
 
-import Window     from './Window';
+import App        from './App';
 
 import './index.scss';
 
@@ -19,7 +19,7 @@ if (div) {
     div.className = 'platform-' + process.platform;
 }
 
-ReactDOM.render(<Window/>, div);
+ReactDOM.render(<App/>, div);
 
 if (module.hot) {
     module.hot.accept();

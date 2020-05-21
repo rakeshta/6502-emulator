@@ -24,7 +24,7 @@
                 {
                     "name": "@electron-forge/maker-squirrel",
                     "config": {
-                        "name": "6502_app"
+                        "name": "rt_6502_app"
                     }
                 },
                 {
@@ -79,16 +79,17 @@
         "@types/react-bootstrap": "^1.0.1",
         "@types/react-dom": "^16.9.8",
         "@types/webpack-env": "^1.15.2",
-        "@typescript-eslint/eslint-plugin": "^2.34.0",
-        "@typescript-eslint/parser": "^2.34.0",
+        "@typescript-eslint/eslint-plugin": "^2.31.0",
+        "@typescript-eslint/parser": "^2.31.0",
         "bootstrap": "^4.5.0",
         "classnames": "^2.2.6",
         "css-loader": "^3.5.3",
         "dasm": "^6.0.1",
-        "electron": "9.0.0",
+        "electron": "8.2.5",
         "electron-context-menu": "^2.0.0",
         "electron-devtools-installer": "^3.0.0",
         "electron-is-dev": "^1.2.0",
+        "electron-squirrel-startup": "^1.0.0",
         "electron-window-state": "^5.0.3",
         "eslint": "^6.8.0",
         "eslint-plugin-jsx-a11y": "^6.2.3",
@@ -109,7 +110,5 @@
         "typescript": "^3.8.3",
         "url-loader": "^4.1.0"
     },
-    "dependencies": {
-        "electron-squirrel-startup": "^1.0.0"
-    }
+    "dependencies": {}
 }

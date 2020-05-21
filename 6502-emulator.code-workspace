@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "platforms/electron/6502-app"
+		},
+		{
+			"path": "platforms/electron/6502-app-x0"
 		}
 	]
 }

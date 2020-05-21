@@ -1,0 +1,26 @@
+//
+//  global.scss
+//  6502-emulator
+//
+//  Created by Rakesh Ayyaswami on 12 May 2020.
+//  Copyright (c) 2020 Raptor Soft. All rights reserved.
+//
+
+@import './theme.scss';
+
+
+// app sizing & layout -------------------------------------------------------------------------------------------------
+
+body {
+    height: 100vh;
+}
+
+#__app {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    -webkit-app-region: drag;
+}
