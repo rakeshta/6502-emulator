@@ -6,10 +6,10 @@
 //  Copyright (c) 2020 Raptor Soft. All rights reserved.
 //
 
-import React      from 'react';
-import ReactDOM   from 'react-dom';
+import React         from 'react';
+import ReactDOM      from 'react-dom';
 
-import Window     from './Window';
+import WindowRouter  from './windows/WindowRouter';
 
 import './index.scss';
 
@@ -19,7 +19,7 @@ if (div) {
     div.className = 'platform-' + process.platform;
 }
 
-ReactDOM.render(<Window/>, div);
+ReactDOM.render(<WindowRouter/>, div);
 
 if (module.hot) {
     module.hot.accept();

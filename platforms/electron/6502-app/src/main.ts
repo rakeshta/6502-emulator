@@ -19,6 +19,8 @@ import { background }         from './styles/theme';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
 
+// set-up --------------------------------------------------------------------------------------------------------------
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
     app.quit();
@@ -29,7 +31,9 @@ if (isDev) {
     contextMenu();
 }
 
-// create window
+
+// create window -------------------------------------------------------------------------------------------------------
+
 const createWindow = (): BrowserWindow => {
 
     // create the browser window
@@ -40,31 +44,41 @@ const createWindow = (): BrowserWindow => {
         minHeight:             768,
         darkTheme:             true,
         backgroundColor:       background.chrome,
-        // show:                  false,
+        show:                  false,
         webPreferences:       {
             nodeIntegration:   true,
         },
     });
     win.setRepresentedFilename('/Users/rakesh/Temp/brand.svg');
 
-    win.once('ready-to-show', () => {
-        // win.show();
-    })
+    // show window when ready
+    win.once('ready-to-show', () => win.show());
 
     // load index.html
-    win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+    win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY + '#document');
 
     // open dev-tools in dev-env & install extensions
     if (isDev) {
         win.webContents.openDevTools();
-        installExtension(REACT_DEVELOPER_TOOLS);
     }
 
     return win;
 };
 
-// create window when app is ready
-app.on('ready', createWindow);
+
+// app events ----------------------------------------------------------------------------------------------------------
+
+// install dev-tools & create window when app is ready
+app.on('ready', () => {
+
+    // install dev-tools if in dev-env
+    if (isDev) {
+        installExtension(REACT_DEVELOPER_TOOLS);
+    }
+
+    // create main window
+    createWindow();
+});
 
 // quit when all windows are closed.
 app.on('window-all-closed', app.quit);
