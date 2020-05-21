@@ -6,12 +6,18 @@
 //  Copyright (c) 2020 Raptor Soft. All rights reserved.
 //
 
-import { app, BrowserWindow } from 'electron';
+import {
+    app,
+    Menu,
+    BrowserWindow,
+}                             from 'electron';
 import installExtension, {
     REACT_DEVELOPER_TOOLS,
 }                             from 'electron-devtools-installer';
 import contextMenu            from 'electron-context-menu';
 import isDev                  from 'electron-is-dev';
+
+import MainMenu               from './MainMenu';
 
 import { background }         from './styles/theme';
 
@@ -30,6 +36,9 @@ if (require('electron-squirrel-startup')) {
 if (isDev) {
     contextMenu();
 }
+
+// set main-menu
+Menu.setApplicationMenu(MainMenu);
 
 
 // create window -------------------------------------------------------------------------------------------------------
