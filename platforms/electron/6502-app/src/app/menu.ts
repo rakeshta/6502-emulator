@@ -10,6 +10,7 @@ import {
     app,
     dialog,
     shell,
+    BrowserWindow,
     Menu,
     MenuItemConstructorOptions,
 }                  from 'electron';
@@ -96,7 +97,9 @@ template.push({
         {
             label:       'Save',
             accelerator: 'CmdOrCtrl+S',
-            click:       (): void => console.log('--debug menu: File > Save'),
+            click:       (menuItem, browserWindow): void => {
+                browserWindow.webContents.send('menu.save');
+            },
         },
         {
             label:       'Save As...',
@@ -106,7 +109,9 @@ template.push({
         {
             label:       'Save All',
             accelerator: 'CmdOrCtrl+Alt+S',
-            click:       (): void => console.log('--debug menu: File > Save All'),
+            click:       (): void => {
+                BrowserWindow.getAllWindows().forEach((win) => win.webContents.send('menu.save'));
+            },
         },
         { type: 'separator' },
         ..._m(isMac ? [

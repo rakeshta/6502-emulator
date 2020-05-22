@@ -82,7 +82,7 @@ const welcome = {
         });
 
         // hook listener to remove instance when closed
-        _welcomeWin.once('close', () => { _welcomeWin = undefined; console.log('--debug welcome closed'); });
+        _welcomeWin.once('close', () => _welcomeWin = undefined);
 
         return _welcomeWin;
     },
@@ -115,7 +115,6 @@ function _createAndShowDocumentWindow(params:  Record<string, string>): BrowserW
     win.once('close', () => {
         const index = _documentWindows.findIndex((w) => w === win);
         if (index >= 0) {
-            console.log('--debug removed window', index);
             _documentWindows.splice(index, 1);
         }
     });
