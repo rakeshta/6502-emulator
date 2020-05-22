@@ -176,6 +176,10 @@ template.push({
     submenu: [
         { role: 'minimize' },
         { role: 'zoom' },
+        { type: 'separator' },
+        { label: 'Welcome', click: (): void => {
+            controller.welcome.show();
+        }},
         ..._m(isMac ? [
             { type: 'separator' },
             { role: 'front' },

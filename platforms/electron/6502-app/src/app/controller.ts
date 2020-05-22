@@ -61,28 +61,69 @@ function _createAndShowWindow(
 
 // welcome window ------------------------------------------------------------------------------------------------------
 
+let _welcomeWin: BrowserWindow | undefined;
+
 const welcome = {
 
     show(): BrowserWindow {
-        return _createAndShowWindow('welcome', null, {
+
+        // focus existing if any
+        if (_welcomeWin) {
+            _welcomeWin.focus();
+            return _welcomeWin;
+        }
+
+        // create new & show
+        _welcomeWin = _createAndShowWindow('welcome', null, {
             width:       800,
             height:      600,
             resizable:   false,
             maximizable: false,
         });
+
+        // hook listener to remove instance when closed
+        _welcomeWin.once('close', () => { _welcomeWin = undefined; console.log('--debug welcome closed'); });
+
+        return _welcomeWin;
+    },
+
+    close(): void {
+        if (_welcomeWin) {
+            _welcomeWin.close();
+            _welcomeWin = undefined;
+        }
     },
 };
 
 
 // document window -----------------------------------------------------------------------------------------------------
 
+const _documentWindows: BrowserWindow[] = [];
+
 function _createAndShowDocumentWindow(params:  Record<string, string>): BrowserWindow {
-    return _createAndShowWindow('document', params, {
+
+    // create & show window
+    const win = _createAndShowWindow('document', params, {
         width:       1024,
         height:      768,
         minWidth:    800,
         minHeight:   600,
     });
+
+    // add to list & remove when closed
+    _documentWindows.push(win);
+    win.once('close', () => {
+        const index = _documentWindows.findIndex((w) => w === win);
+        if (index >= 0) {
+            console.log('--debug removed window', index);
+            _documentWindows.splice(index, 1);
+        }
+    });
+
+    // close any welcome window when this one appears
+    win.once('show', () => welcome.close());
+
+    return win;
 }
 
 const document = {
