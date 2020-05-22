@@ -76,15 +76,23 @@ const welcome = {
 
 // document window -----------------------------------------------------------------------------------------------------
 
+function _createAndShowDocumentWindow(params:  Record<string, string>): BrowserWindow {
+    return _createAndShowWindow('document', params, {
+        width:       1024,
+        height:      768,
+        minWidth:    800,
+        minHeight:   600,
+    });
+}
+
 const document = {
 
+    new(): BrowserWindow {
+        return _createAndShowDocumentWindow({newFileName: 'Untitled'});
+    },
+
     open(filePath: string): BrowserWindow {
-        return _createAndShowWindow('document', {filePath}, {
-            width:       1024,
-            height:      768,
-            minWidth:    800,
-            minHeight:   600,
-        });
+        return _createAndShowDocumentWindow({filePath});
     },
 };
 

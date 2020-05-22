@@ -60,7 +60,9 @@ template.push({
         {
             label:       'New',
             accelerator: 'CmdOrCtrl+N',
-            click:       (): void => console.log('--debug menu: File > New'),
+            click:       (): void => {
+                controller.document.new();
+            },
         },
         {
             label:       'New From Template...',
@@ -86,7 +88,6 @@ template.push({
                 }
 
                 // open file in a new window
-                console.log('--debug open', res);
                 controller.document.open(res.filePaths[0]);
             },
         },
