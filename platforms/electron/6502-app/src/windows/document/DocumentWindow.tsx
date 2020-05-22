@@ -9,12 +9,16 @@
 import React    from 'react';
 
 
-export default class DocumentWindow extends React.PureComponent {
+export interface Props {
+    filePath:    string;
+}
+
+export default class DocumentWindow extends React.PureComponent<Props> {
 
     public render(): React.ReactNode {
         return (
             <div className='window welcome'>
-                <h1>Document Window</h1>
+                <h1>Document Window: {this.props.filePath}</h1>
             </div>
         );
     }

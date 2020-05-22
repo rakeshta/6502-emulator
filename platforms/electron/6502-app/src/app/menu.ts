@@ -1,5 +1,5 @@
 //
-//  MainMenu.ts
+//  menu.ts
 //  6502-emulator
 //
 //  Created by Rakesh Ayyaswami on 21 May 2020.
@@ -8,11 +8,14 @@
 
 import {
     app,
+    dialog,
     shell,
     Menu,
     MenuItemConstructorOptions,
-}               from 'electron';
-import isDev    from 'electron-is-dev';
+}                  from 'electron';
+import isDev       from 'electron-is-dev';
+
+import controller  from './controller';
 
 
 // helpers -------------------------------------------------------------------------------------------------------------
@@ -67,7 +70,25 @@ template.push({
         {
             label:       'Open',
             accelerator: 'CmdOrCtrl+O',
-            click:       (): void => console.log('--debug menu: File > Open'),
+            click:       async (): Promise<void> => {
+
+                // show open dialog
+                const res = await dialog.showOpenDialog({
+                    filters: [
+                        {name: '6502 Assembly Language File',  extensions: ['6502s', '65s']},
+                        {name: 'Other Assembly Language File', extensions: ['asm', 's']},
+                        {name: 'All Files',                    extensions: ['*']},
+                    ],
+                    properties: ['openFile'],
+                });
+                if (res.canceled) {
+                    return;
+                }
+
+                // open file in a new window
+                console.log('--debug open', res);
+                controller.document.open(res.filePaths[0]);
+            },
         },
         { role: 'recentDocuments' },
         { type: 'separator' },

@@ -21,12 +21,14 @@
     ],
     "parser": "@typescript-eslint/parser",
     "rules": {
+        "@typescript-eslint/semi": ["error"],
         "max-len": [
             "warn",
             {
                 "code": 120
             }
-        ]
+        ],
+        "semi": "off" // using @typescript-eslint/semi instead
     },
     "settings": {
         "react": {
