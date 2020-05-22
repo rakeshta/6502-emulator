@@ -39,7 +39,7 @@ module.exports = {
     plugins: [
         new ForkTsCheckerWebpackPlugin({async: false, eslint: true}),
         new MonacoWebpackPlugin({
-            languages: ['typescript'],
+            languages: [],
             features:  [
                 'accessibilityHelp', 'bracketMatching', 'caretOperations', 'clipboard', 'codeAction', /* 'codelens', */
                 /* 'colorDetector', */ 'comment', 'contextmenu', 'coreCommands', 'cursorUndo', 'dnd', 'find', 'folding',
