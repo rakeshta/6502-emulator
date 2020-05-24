@@ -18,9 +18,8 @@ body {
 #__app {
     height: 100%;
 
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-
-    -webkit-app-region: drag;
+    & > .window {
+        height: 100%;
+        overflow: auto;
+    }
 }
