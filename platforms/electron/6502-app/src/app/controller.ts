@@ -11,17 +11,30 @@ import {
     BrowserWindowConstructorOptions,
 }                             from 'electron';
 import isDev                  from 'electron-is-dev';
+import windowStateKeeper      from 'electron-window-state';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
 
 // helpers -------------------------------------------------------------------------------------------------------------
 
+interface CreateWindowOptions extends BrowserWindowConstructorOptions {
+    restoreSize?:   boolean;
+}
+
 function _createAndShowWindow(
     type:    string,
     params:  Record<string, string> | null,
-    options: BrowserWindowConstructorOptions,
+    options: CreateWindowOptions,
 ): BrowserWindow {
+
+    // extract our custom options
+    const {restoreSize, ...rest} = options;
+
+    // restore size if needed
+    const windowState = restoreSize
+        ? windowStateKeeper({defaultWidth: options.width, defaultHeight: options.height})
+        : undefined;
 
     // create window
     const win = new BrowserWindow({
@@ -30,8 +43,14 @@ function _createAndShowWindow(
             enableRemoteModule: true,
             nodeIntegration:    true,
         },
-        ...options,
+        ...rest,
+        ...windowState,
     });
+
+    // hook window state manager
+    if (windowState) {
+        windowState.manage(win);
+    }
 
     // show when ready
     win.once('ready-to-show', () => win.show());
@@ -97,7 +116,7 @@ const welcome = {
 
 const _documentWindows: BrowserWindow[] = [];
 
-function _createAndShowDocumentWindow(params:  Record<string, string>): BrowserWindow {
+function _createAndShowDocumentWindow(params:  Record<string, string>, options?: CreateWindowOptions): BrowserWindow {
 
     // create & show window
     const win = _createAndShowWindow('document', params, {
@@ -105,6 +124,7 @@ function _createAndShowDocumentWindow(params:  Record<string, string>): BrowserW
         height:      768,
         minWidth:    800,
         minHeight:   600,
+        ...options,
     });
 
     // add to list & remove when closed
@@ -129,7 +149,7 @@ const document = {
     },
 
     open(filePath: string): BrowserWindow {
-        return _createAndShowDocumentWindow({filePath});
+        return _createAndShowDocumentWindow({filePath}, {restoreSize: true});
     },
 };
 
