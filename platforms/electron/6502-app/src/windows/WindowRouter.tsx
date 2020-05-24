@@ -6,20 +6,28 @@
 //  Copyright (c) 2020 Raptor Soft. All rights reserved.
 //
 
-import React           from 'react';
+import React            from 'react';
 
-import WelcomeWindow   from './welcome/WelcomeWindow';
-import DocumentWindow  from './document/DocumentWindow';
+import ThemeController  from '../styles/ThemeController';
+
+import WelcomeWindow    from './welcome/WelcomeWindow';
+import DocumentWindow   from './document/DocumentWindow';
 
 
 // routes --------------------------------------------------------------------------------------------------------------
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function _component(type: string): React.ComponentType<any> | undefined {
+function _component(type?: string): React.ComponentType<any> {
     switch (type) {
         case 'welcome':  return WelcomeWindow;
         case 'document': return DocumentWindow;
-        default:         return undefined;
+        default:         return React.memo(function NotFound() {
+            return (
+                <div className='window not-found'>
+                    <h1>Invalid route: {type || '<null>'}</h1>
+                </div>
+            );
+        });
     }
 }
 
@@ -55,20 +63,16 @@ function _routeInfo(): {type: string; params: Record<string, string>} | undefine
 
 const WindowRouter = React.memo(() => {
 
-    // extract route type & params
-    const route = _routeInfo();
+    // extract route info & get component
+    const route     = _routeInfo();
+    const Component = _component(route?.type);
 
-    // render window based on type
-    const Component = route && _component(route.type);
-    if (Component) {
-        return <Component {...route?.params}/>;
-    }
-
-    // no route
+    // render
     return (
-        <div className='window not-found'>
-            <h1>Invalid route: {route ? route.type : '<null>'}</h1>
-        </div>
+        <React.Fragment>
+            <ThemeController/>
+            <Component {...route?.params}/>
+        </React.Fragment>
     );
 });
 

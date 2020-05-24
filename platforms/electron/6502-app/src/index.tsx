@@ -14,13 +14,13 @@ import WindowRouter  from './windows/WindowRouter';
 import './index.scss';
 
 
-const div = document.getElementById('__app');
-if (div) {
-    div.className = 'platform-' + process.platform;
-}
+// set platform name on document for platform dependent styles
+document.documentElement.setAttribute('data-platform', process.platform);
 
-ReactDOM.render(<WindowRouter/>, div);
+// render app
+ReactDOM.render(<WindowRouter/>, document.getElementById('__app'));
 
+// enable hot reloading
 if (module.hot) {
     module.hot.accept();
 }

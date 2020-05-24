@@ -76,9 +76,23 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
     public render(): React.ReactNode {
         const {fileName} = this.state;
         return (
-            <div className='window welcome'>
+            <div className='window welcome p-2'>
                 <IpcListener channel='menu.save' listener={this._ipc_onSave}/>
-                <h1>Document Window: {fileName}</h1>
+                <h4>Document Window: {fileName}</h4>
+                <div className='bg-primary'>
+                    <h5>Primary BG Area</h5>
+                    <p>Primary text</p>
+                    <p className='fg-secondary'>Secondary text</p>
+                    <p className='fg-muted'>Muted content</p>
+                    <p className='fg-ghost'>Ghosted text</p>
+                </div>
+                <div className='bg-secondary'>
+                    <h5>Secondary BG Area</h5>
+                    <p>Primary text</p>
+                    <p className='fg-secondary'>Secondary text</p>
+                    <p className='fg-muted'>Muted content</p>
+                    <p className='fg-ghost'>Ghosted text</p>
+                </div>
             </div>
         );
     }

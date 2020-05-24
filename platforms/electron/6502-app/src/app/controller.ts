@@ -12,8 +12,6 @@ import {
 }                             from 'electron';
 import isDev                  from 'electron-is-dev';
 
-import { background }         from '../styles/theme';
-
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
 
@@ -27,11 +25,10 @@ function _createAndShowWindow(
 
     // create window
     const win = new BrowserWindow({
-        darkTheme:             true,
-        backgroundColor:       background.chrome,
-        show:                  false,
+        show:                   false,
         webPreferences:       {
-            nodeIntegration:   true,
+            enableRemoteModule: true,
+            nodeIntegration:    true,
         },
         ...options,
     });

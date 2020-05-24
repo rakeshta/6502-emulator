@@ -6,29 +6,51 @@
 //  Copyright (c) 2020 Raptor Soft. All rights reserved.
 //
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 // NOTE: This file has to be JS as it is included from webpack.renderer.config.js
+
 
 // theme ---------------------------------------------------------------------------------------------------------------
 
 const theme = {
-    color: {
-        primary:      '#A30B37',
+    light: {
+        color: {
+            primary:      '#A30B37',
+        },
+        background: {
+            chrome:       '#c1c8cc',
+            primary:      '#f7fcff',
+            secondary:    '#f0f0f7',
+        },
+        foreground: {
+            primary:      '#202020',
+            secondary:    '#606060',
+            muted:        '#cccccc',
+            ghost:        '#e0e0e0',
+        },
+        editor: {
+            comment:      '#5C6370',
+            instruction:  '#D19A66',
+        },
     },
-    background: {
-        chrome:       '#0F1A20',
-        primary:      '#1E282D',
-        secondary:    '#272C33',
-    },
-    foreground: {
-        primary:      '#FAF8FC',
-        secondary:    '#CCC9DC',
-        muted:        '#D6D3E3',
-        ghost:        '#525063',
-    },
-    editor: {
-        comment:      '#5C6370',
-        instruction:  '#D19A66',
+    dark: {
+        color: {
+            primary:      '#A30B37',
+        },
+        background: {
+            chrome:       '#0F1A20',
+            primary:      '#1E282D',
+            secondary:    '#272C33',
+        },
+        foreground: {
+            primary:      '#FAF8FC',
+            secondary:    '#CCC9DC',
+            muted:        '#D6D3E3',
+            ghost:        '#525063',
+        },
+        editor: {
+            comment:      '#5C6370',
+            instruction:  '#D19A66',
+        },
     },
 };
 

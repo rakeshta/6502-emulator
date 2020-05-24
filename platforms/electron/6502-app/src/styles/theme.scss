@@ -6,50 +6,76 @@
 //  Copyright (c) 2020 Raptor Soft. All rights reserved.
 //
 
-// theme variable short-forms ------------------------------------------------------------------------------------------
-
-$color-primary:  $theme-color-primary;
-
-$bg-chrome:      $theme-background-chrome;
-$bg-primary:     $theme-background-primary;
-$bg-secondary:   $theme-background-secondary;
-
-$fg-primary:     $theme-foreground-primary;
-$fg-secondary:   $theme-foreground-secondary;
-$fg-muted:       $theme-foreground-muted;
-$fg-ghost:       $theme-foreground-ghost;
-
-
-// bootstrap customization ---------------------------------------------------------------------------------------------
+// bootstrap -----------------------------------------------------------------------------------------------------------
 
 $theme-colors: (
-    "primary": $color-primary,
+    "primary": $theme-light-color-primary,
 );
-
-$body-bg:      $bg-chrome;
-$body-color:   $fg-primary;
-
-
-// Navs
-
-$nav-link-padding-y:                 0.3rem;
-$nav-tabs-border-color:              $fg-ghost;
-$nav-tabs-link-hover-border-color:   $fg-ghost $fg-ghost $nav-tabs-border-color !default;
-$nav-tabs-link-active-color:         $fg-secondary;
-$nav-tabs-link-active-bg:            $bg-primary;
-$nav-tabs-link-active-border-color:  $fg-ghost $fg-ghost $nav-tabs-link-active-bg;
-
-.nav-link {
-    color: $fg-secondary;
-    user-select: none;
-    -webkit-user-drag: none;
-    &:hover {
-        color: $fg-primary;
-    }
-}
 
 
 @import '~bootstrap/scss/bootstrap.scss';
+
+
+// theme color variables -----------------------------------------------------------------------------------------------
+
+document:not([data-theme]), // default to light theme
+[data-theme='light'] {
+
+    --color-primary:   #{$theme-light-color-primary};
+
+    --bg-chrome:       #{$theme-light-background-chrome};
+    --bg-primary:      #{$theme-light-background-primary};
+    --bg-secondary:    #{$theme-light-background-secondary};
+
+    --fg-primary:      #{$theme-light-foreground-primary};
+    --fg-secondary:    #{$theme-light-foreground-secondary};
+    --fg-muted:        #{$theme-light-foreground-muted};
+    --fg-ghost:        #{$theme-light-foreground-ghost};
+
+    --ed-comment:      #{$theme-light-editor-comment};
+    --ed-instruction:  #{$theme-light-editor-instruction};
+}
+
+[data-theme='dark'] {
+
+    --color-primary:   #{$theme-dark-color-primary};
+
+    --bg-chrome:       #{$theme-dark-background-chrome};
+    --bg-primary:      #{$theme-dark-background-primary};
+    --bg-secondary:    #{$theme-dark-background-secondary};
+
+    --fg-primary:      #{$theme-dark-foreground-primary};
+    --fg-secondary:    #{$theme-dark-foreground-secondary};
+    --fg-muted:        #{$theme-dark-foreground-muted};
+    --fg-ghost:        #{$theme-dark-foreground-ghost};
+
+    --ed-comment:      #{$theme-dark-editor-comment};
+    --ed-instruction:  #{$theme-dark-editor-instruction};
+}
+
+
+// element styles ------------------------------------------------------------------------------------------------------
+
+body {
+    background-color: var(--bg-chrome);
+    color: var(--fg-primary);
+}
+
+
+// convenience classes -------------------------------------------------------------------------------------------------
+
+/* Using `!important` to override bootstrap colors */
+
+.color-primary  { color: var(--color-primary) !important; }
+
+.bg-chrome      { background-color: var(--bg-chrome)    !important; }
+.bg-primary     { background-color: var(--bg-primary)   !important; }
+.bg-secondary   { background-color: var(--bg-secondary) !important; }
+
+.fg-primary     { color: var(--fg-primary)   !important; }
+.fg-secondary   { color: var(--fg-secondary) !important; }
+.fg-muted       { color: var(--fg-muted)     !important; }
+.fg-ghost       { color: var(--fg-ghost)     !important; }
 
 
 // global overrides ----------------------------------------------------------------------------------------------------
@@ -62,16 +88,4 @@ a, .btn:not(:disabled):not(.disable), [role='button'] {
 // no button outlines
 .btn:focus, .btn:active {
     box-shadow: none;
-}
-
-// theme color variables -----------------------------------------------------------------------------------------------
-
-:root {
-    --color-primary:   #{$color-primary};
-    --bg-primary:      #{$bg-primary};
-    --bg-secondary:    #{$bg-secondary};
-    --fg-primary:      #{$fg-primary};
-    --fg-secondary:    #{$fg-secondary};
-    --fg-muted:        #{$fg-muted};
-    --fg-ghost:        #{$fg-ghost};
 }
