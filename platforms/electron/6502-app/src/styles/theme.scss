@@ -54,11 +54,24 @@ document:not([data-theme]), // default to light theme
 }
 
 
+// theme fonts ---------------------------------------------------------------------------------------------------------
+
+@import './fonts.scss';
+
+:root {
+    --font-family-primary: 'Telegrama-Render';
+    --font-family-8bit:    'Telegrama-Raw';
+    --font-family-editor:  'Victor Mono';
+}
+
+
+
 // element styles ------------------------------------------------------------------------------------------------------
 
 body {
     background-color: var(--bg-chrome);
     color: var(--fg-primary);
+    font-family: var(--font-family-primary);
 }
 
 
