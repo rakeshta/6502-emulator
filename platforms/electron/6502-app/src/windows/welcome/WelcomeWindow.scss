@@ -1,0 +1,40 @@
+//
+//  WelcomeWindow.scss
+//  6502-emulator
+//
+//  Created by Rakesh Ayyaswami on 25 May 2020.
+//  Copyright (c) 2020 Raptor Soft. All rights reserved.
+//
+
+@import '../../styles/mixins.scss';
+
+
+.window.welcome {
+    @include display-flex-row;
+
+    & > .split.splash {
+        flex: 1;
+        background-color: var(--bg-chrome);
+        @include display-flex-column;
+        -webkit-app-region: drag;
+
+        // close button
+        .btn-close {
+            padding: 1px 7px;
+            color: var(--fg-muted);
+
+            &:hover {
+                color: var(--fg-secondary);
+            }
+            &:active {
+                color: var(--fg-primary);
+            }
+        }
+    }
+
+    & > .split.recents {
+        flex: 0.8;
+        background-color: var(--bg-primary);
+        @include display-flex-column;
+    }
+}

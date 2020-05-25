@@ -42,6 +42,7 @@ function _createAndShowWindow(
         webPreferences:       {
             enableRemoteModule: true,
             nodeIntegration:    true,
+            devTools:           isDev,
         },
         ...rest,
         ...windowState,
@@ -66,11 +67,6 @@ function _createAndShowWindow(
     console.log('Launching ', MAIN_WINDOW_WEBPACK_ENTRY + suffix);
     win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY + suffix);
 
-    // open dev-tools in dev-env
-    if (isDev) {
-        win.webContents.openDevTools();
-    }
-
     return win;
 }
 
@@ -91,10 +87,12 @@ const welcome = {
 
         // create new & show
         _welcomeWin = _createAndShowWindow('welcome', null, {
-            width:       800,
-            height:      600,
-            resizable:   false,
-            maximizable: false,
+            width:           800,
+            height:          480,
+            resizable:       false,
+            minimizable:     false,
+            maximizable:     false,
+            frame:           false,
         });
 
         // hook listener to remove instance when closed

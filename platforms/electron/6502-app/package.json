@@ -1,6 +1,6 @@
 {
     "name": "6502-app",
-    "productName": "6502-app",
+    "productName": "6502 app",
     "version": "1.0.0",
     "description": "6502 Emulator",
     "main": ".webpack/main",

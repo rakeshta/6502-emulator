@@ -43,9 +43,9 @@ const theme = {
         },
         foreground: {
             primary:      '#FAF8FC',
-            secondary:    '#CCC9DC',
-            muted:        '#D6D3E3',
-            ghost:        '#525063',
+            secondary:    '#aaaaaa',
+            muted:        '#606060',
+            ghost:        '#303030',
         },
         editor: {
             comment:      '#5C6370',
