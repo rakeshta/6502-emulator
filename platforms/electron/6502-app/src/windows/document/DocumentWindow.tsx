@@ -14,6 +14,10 @@ import { promisify }  from 'util';
 
 import IpcListener    from '../../components/utility/IpcListener';
 
+import Editor         from '../../components/editor/Editor';
+
+import './DocumentWindow.scss';
+
 
 const readFile = promisify(fs.readFile);
 
@@ -74,25 +78,10 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
     // render ----------------------------------------------------------------------------------------------------------
 
     public render(): React.ReactNode {
-        const {fileName} = this.state;
         return (
-            <div className='window document p-2'>
+            <div className='window document'>
                 <IpcListener channel='menu.save' listener={this._ipc_onSave}/>
-                <h4>Document Window: {fileName}</h4>
-                <div className='bg-primary'>
-                    <h5>Primary BG Area</h5>
-                    <p>Primary text</p>
-                    <p className='fg-secondary'>Secondary text</p>
-                    <p className='fg-muted'>Muted content</p>
-                    <p className='fg-ghost'>Ghosted text</p>
-                </div>
-                <div className='bg-secondary'>
-                    <h5>Secondary BG Area</h5>
-                    <p>Primary text</p>
-                    <p className='fg-secondary'>Secondary text</p>
-                    <p className='fg-muted'>Muted content</p>
-                    <p className='fg-ghost'>Ghosted text</p>
-                </div>
+                <Editor className='editor'/>
             </div>
         );
     }
