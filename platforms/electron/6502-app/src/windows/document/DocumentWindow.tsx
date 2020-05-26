@@ -38,6 +38,8 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
 
     public state: State = {};
 
+    private _editorRef  = React.createRef<Editor>();
+
 
     // lifecycle -------------------------------------------------------------------------------------------------------
 
@@ -54,10 +56,14 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
         // load file if given
         const filePath     = this.state.filePath || this.props.filePath;
         if (filePath) {
-            const contents = await readFile(filePath, 'utf8');
-            console.group('--debug file', filePath, '\n', contents);
+
+            // TODO: should we save this to state?
             const fileName = path.basename(filePath);
             this.setState({fileName, filePath});
+
+            // load contents into editor
+            const contents = await readFile(filePath, 'utf8');
+            this._editorRef.current?.setText(contents);
         }
 
         // set filename if new file
@@ -81,7 +87,7 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
         return (
             <div className='window document'>
                 <IpcListener channel='menu.save' listener={this._ipc_onSave}/>
-                <Editor className='editor'/>
+                <Editor ref={this._editorRef} className='editor'/>
             </div>
         );
     }

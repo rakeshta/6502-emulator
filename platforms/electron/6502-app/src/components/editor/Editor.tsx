@@ -75,6 +75,17 @@ export default class Editor extends React.PureComponent<Props> {
     }
 
 
+    // public methods --------------------------------------------------------------------------------------------------
+
+    public getText(): string {
+        return this._model?.getValue() || '';
+    }
+
+    public setText(text: string): void {
+        this._model?.setValue(text);
+    }
+
+
     // events ----------------------------------------------------------------------------------------------------------
 
     private _onWindowResize = (): void => {
