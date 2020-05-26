@@ -59,6 +59,9 @@ export default class Editor extends React.PureComponent<Props> {
             heightInLines:   0.5,
             domNode:         document.createElement('div'),
         }));
+
+        // focus on the editor
+        this._editor?.focus();
     }
 
     public componentWillUnmount(): void {
