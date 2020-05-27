@@ -17,6 +17,7 @@ import {
 import isDev       from 'electron-is-dev';
 
 import controller  from './controller';
+import config      from '../config';
 
 
 // helpers -------------------------------------------------------------------------------------------------------------
@@ -77,11 +78,7 @@ template.push({
 
                 // show open dialog
                 const res = await dialog.showOpenDialog({
-                    filters: [
-                        {name: '6502 Assembly Language File',  extensions: ['6502s', '65s']},
-                        {name: 'Other Assembly Language File', extensions: ['asm', 's']},
-                        {name: 'All Files',                    extensions: ['*']},
-                    ],
+                    filters:     config.file.filters,
                     properties: ['openFile'],
                 });
                 if (res.canceled) {

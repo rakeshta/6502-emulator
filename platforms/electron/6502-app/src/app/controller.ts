@@ -13,6 +13,9 @@ import {
 import isDev                  from 'electron-is-dev';
 import windowStateKeeper      from 'electron-window-state';
 
+import config                 from '../config';
+
+
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
 
@@ -143,7 +146,7 @@ function _createAndShowDocumentWindow(params:  Record<string, string>, options?:
 const document = {
 
     new(): BrowserWindow {
-        return _createAndShowDocumentWindow({newFileName: 'Untitled'});
+        return _createAndShowDocumentWindow({newFileName: 'Untitled.' + config.file.defaultExtension});
     },
 
     open(filePath: string): BrowserWindow {

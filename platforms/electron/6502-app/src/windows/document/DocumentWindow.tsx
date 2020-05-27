@@ -17,13 +17,15 @@ import {
 }                     from 'electron';
 
 import IpcListener    from '../../components/utility/IpcListener';
-
 import Editor         from '../../components/editor/Editor';
+
+import config         from '../../config';
 
 import './DocumentWindow.scss';
 
 
-const readFile = promisify(fs.readFile);
+const readFile  = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
 
 
 // class DocumentWindow ------------------------------------------------------------------------------------------------
@@ -53,6 +55,7 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
     }
 
     private set fileName(value: string | undefined) {
+        if (value === this._fileName) { return; }
         this._fileName = value;
         if (value) {
             this.browserWindow.setTitle(value);
@@ -64,7 +67,9 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
     }
 
     private set filePath(value: string | undefined) {
+        if (value === this._filePath) { return; }
         this._filePath = value;
+        this.fileName  = value && path.basename(value);
         if (value) {
             this.browserWindow.setRepresentedFilename(value);
         }
@@ -87,7 +92,6 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
         // initialize file name path
         const {newFileName, filePath} = this.props;
         if (filePath) {
-            this.fileName = path.basename(filePath);
             this.filePath = filePath;
         }
         else if (newFileName) {
@@ -95,13 +99,13 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
         }
 
         // load contents
-        this._reload();
+        this._load();
     }
 
 
-    // load ------------------------------------------------------------------------------------------------------------
+    // load / save -----------------------------------------------------------------------------------------------------
 
-    private async _reload(): Promise<void> {
+    private async _load(): Promise<void> {
 
         // load file if given
         const filePath = this.filePath;
@@ -111,15 +115,43 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
         }
     }
 
+    private async _save(): Promise<void> {
+
+        // show save dialog if no file path
+        let filePath = this.filePath;
+        if (!filePath) {
+
+            // show save dialog, abort if cancelled
+            const res = await remote.dialog.showSaveDialog(this.browserWindow, {
+                defaultPath:  this._fileName,
+                filters:      config.file.filters,
+                properties: ['createDirectory', 'showOverwriteConfirmation'],
+            });
+            if (!res.filePath) {
+                return;
+            }
+
+            // continue with file path
+            filePath = res.filePath;
+        }
+
+        // save file
+        const text = this._editorRef.current?.getText() ?? '';
+        await writeFile(filePath, text, 'utf8');
+
+        // update file path & mark editor not dirty
+        this.filePath = filePath;
+        this.isEdited = false;
+    }
+
 
     // events ----------------------------------------------------------------------------------------------------------
 
     private _ipc_onSave = (): void => {
-        console.log('--debug save');
+        this._save();
     };
 
     private _editor_onChange = (): void => {
-        console.log('--debug should save');
         this.isEdited = true;
     };
 
