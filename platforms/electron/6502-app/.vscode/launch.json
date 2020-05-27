@@ -13,7 +13,47 @@
                 // TODO: Modify broken electron-forge-vscode-win.cmd when required
                 "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron-forge-vscode-win.cmd"
             },
-            "cwd": "${workspaceFolder}"
+            "runtimeArgs": [
+                "--remote-debugging-port=9223",
+                "."
+            ],
+            "cwd": "${workspaceFolder}",
+            "outFiles": [
+                "${workspaceFolder}/.webpack/main/index.js",
+                "${workspaceFolder}/.webpack/renderer/main_window/index.js",
+            ],
+            "presentation": {
+                "hidden": false,
+                "group": "Threads",
+                "order": 1
+            }
         },
+        {
+            "name": "6502 App: Renderer",
+            "type": "chrome",
+            "request": "attach",
+            "port": 9223,
+            "webRoot": "${workspaceFolder}",
+            "timeout": 30000,
+            "presentation": {
+                "hidden": false,
+                "group": "Threads",
+                "order": 2
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "6502 App: All",
+            "configurations": [
+                "6502 App: Main",
+                "6502 App: Renderer"
+            ],
+            "presentation": {
+                "hidden": false,
+                "group": "Master",
+                "order": 0
+            }
+        }
     ]
 }
