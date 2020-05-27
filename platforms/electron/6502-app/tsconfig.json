@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
         "allowJs": true,
-        // "allowSyntheticDefaultImports": true,
-        "module": "commonjs",
+        "module": "ESNext",
+        "target": "ES2019",
 
+        "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "isolatedModules": true,
