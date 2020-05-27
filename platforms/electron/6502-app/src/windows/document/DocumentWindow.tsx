@@ -11,6 +11,10 @@ import React          from 'react';
 import fs             from 'fs';
 import path           from 'path';
 import { promisify }  from 'util';
+import {
+    remote,
+    BrowserWindow,
+}                     from 'electron';
 
 import IpcListener    from '../../components/utility/IpcListener';
 
@@ -29,22 +33,68 @@ export interface Props {
     newFileName?: string;
 }
 
-interface State {
-    filePath?:    string;
-    fileName?:    string;
-}
-
-export default class DocumentWindow extends React.PureComponent<Props, State> {
-
-    public state: State = {};
+export default class DocumentWindow extends React.PureComponent<Props, {}> {
 
     private _editorRef  = React.createRef<Editor>();
+
+
+    private _fileName?:   string;
+    private _filePath?:   string;
+
+
+    // accessors -------------------------------------------------------------------------------------------------------
+
+    private get browserWindow(): BrowserWindow {
+        return remote.getCurrentWindow();
+    }
+
+    private get fileName(): string | undefined {
+        return this._fileName;
+    }
+
+    private set fileName(value: string | undefined) {
+        this._fileName = value;
+        if (value) {
+            this.browserWindow.setTitle(value);
+        }
+    }
+
+    private get filePath(): string | undefined {
+        return this._filePath;
+    }
+
+    private set filePath(value: string | undefined) {
+        this._filePath = value;
+        if (value) {
+            this.browserWindow.setRepresentedFilename(value);
+        }
+    }
+
+    private get isEdited(): boolean {
+        return this.browserWindow.isDocumentEdited();
+    }
+
+    private set isEdited(value: boolean) {
+        this.browserWindow.setDocumentEdited(value);
+    }
 
 
     // lifecycle -------------------------------------------------------------------------------------------------------
 
     public componentDidMount(): void {
         super.componentDidMount?.();
+
+        // initialize file name path
+        const {newFileName, filePath} = this.props;
+        if (filePath) {
+            this.fileName = path.basename(filePath);
+            this.filePath = filePath;
+        }
+        else if (newFileName) {
+            this.fileName = newFileName;
+        }
+
+        // load contents
         this._reload();
     }
 
@@ -54,22 +104,10 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
     private async _reload(): Promise<void> {
 
         // load file if given
-        const filePath     = this.state.filePath || this.props.filePath;
+        const filePath = this.filePath;
         if (filePath) {
-
-            // TODO: should we save this to state?
-            const fileName = path.basename(filePath);
-            this.setState({fileName, filePath});
-
-            // load contents into editor
             const contents = await readFile(filePath, 'utf8');
             this._editorRef.current?.setText(contents);
-        }
-
-        // set filename if new file
-        else if (this.props.newFileName) {
-            const fileName = this.props.newFileName;
-            this.setState({fileName});
         }
     }
 
@@ -80,6 +118,11 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
         console.log('--debug save');
     };
 
+    private _editor_onChange = (): void => {
+        console.log('--debug should save');
+        this.isEdited = true;
+    };
+
 
     // render ----------------------------------------------------------------------------------------------------------
 
@@ -87,7 +130,7 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
         return (
             <div className='window document'>
                 <IpcListener channel='menu.save' listener={this._ipc_onSave}/>
-                <Editor ref={this._editorRef} className='editor'/>
+                <Editor ref={this._editorRef} className='editor' onChange={this._editor_onChange}/>
             </div>
         );
     }

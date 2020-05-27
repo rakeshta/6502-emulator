@@ -11,16 +11,29 @@ import * as monaco  from 'monaco-editor';
 import classes      from 'classnames';
 
 
+// types ---------------------------------------------------------------------------------------------------------------
+
+type IDisposable               = monaco.IDisposable;
+type ITextModel                = monaco.editor.ITextModel;
+type IStandaloneCodeEditor     = monaco.editor.IStandaloneCodeEditor;
+type IModelContentChangedEvent = monaco.editor.IModelContentChangedEvent;
+
+
+// class Editor --------------------------------------------------------------------------------------------------------
+
 export interface Props {
     className?:  string;
+    onChange?:  () => void;
 }
 
 export default class Editor extends React.PureComponent<Props> {
 
     private _containerRef         = React.createRef<HTMLDivElement>();
 
-    private _model?:                monaco.editor.ITextModel;
-    private _editor?:               monaco.editor.IStandaloneCodeEditor;
+    private _model?:                ITextModel;
+    private _editor?:               IStandaloneCodeEditor;
+
+    private _didChangeListener?:    IDisposable;
 
     private _containerWidthDelta  = 0;
     private _containerHeightDelta = 0;
@@ -44,13 +57,15 @@ export default class Editor extends React.PureComponent<Props> {
 
         // mount editor
         this._model  = monaco.editor.createModel('');
-        this._model?.onDidChangeContent(this._model_onDidChangeContent);
         this._editor = monaco.editor.create(container, {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             model:                 this._model!,
             theme:                'custom',
             scrollBeyondLastLine:  false,
         });
+
+        // register for change events
+        this._didChangeListener = this._model?.onDidChangeContent(this._model_onDidChangeContent);
 
         // add some space above the first line
         // magic code copied from: https://github.com/Microsoft/monaco-editor/issues/1333
@@ -77,12 +92,19 @@ export default class Editor extends React.PureComponent<Props> {
 
     // public methods --------------------------------------------------------------------------------------------------
 
+    public getVersionId(): number {
+        return this._model?.getVersionId() ?? -1;
+    }
+
     public getText(): string {
         return this._model?.getValue() || '';
     }
 
     public setText(text: string): void {
+        // temporarily detach change handler while we set the text to suppress superfluous event
+        this._didChangeListener?.dispose();
         this._model?.setValue(text);
+        this._didChangeListener = this._model?.onDidChangeContent(this._model_onDidChangeContent);
     }
 
 
@@ -99,8 +121,7 @@ export default class Editor extends React.PureComponent<Props> {
     };
 
     private _model_onDidChangeContent = (): void => {
-        const value = this._model?.getValue() || '';
-        console.log('--debug value', value);
+        this.props.onChange?.();
     };
 
 
