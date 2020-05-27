@@ -37,11 +37,12 @@ export interface Props {
 
 export default class DocumentWindow extends React.PureComponent<Props, {}> {
 
-    private _editorRef  = React.createRef<Editor>();
+    private _editorRef        = React.createRef<Editor>();
 
+    private _fileName?:         string;
+    private _filePath?:         string;
 
-    private _fileName?:   string;
-    private _filePath?:   string;
+    private _diskFileWatcher?:  fs.FSWatcher;
 
 
     // accessors -------------------------------------------------------------------------------------------------------
@@ -67,9 +68,26 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
     }
 
     private set filePath(value: string | undefined) {
+
+        // skip if no change
         if (value === this._filePath) { return; }
+
+        // stop listening to changes on old file
+        if (this._diskFileWatcher) {
+            this._diskFileWatcher.close();
+            this._diskFileWatcher = undefined;
+        }
+
+        // save file path & file name
         this._filePath = value;
         this.fileName  = value && path.basename(value);
+
+        // start listening to changes on new file
+        if (value) {
+            this._diskFileWatcher = fs.watch(value, this._diskFile_onChange);
+        }
+
+        // update represented file
         if (value) {
             this.browserWindow.setRepresentedFilename(value);
         }
@@ -100,6 +118,16 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
 
         // load contents
         this._load();
+    }
+
+    public componentWillUnmount(): void {
+        super.componentWillUnmount?.();
+
+        // stop listening to file events
+        if (this._diskFileWatcher) {
+            this._diskFileWatcher.close();
+            this._diskFileWatcher = undefined;
+        }
     }
 
 
@@ -137,7 +165,9 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
 
         // save file
         const text = this._editorRef.current?.getText() ?? '';
+        console.log('--debug will write');
         await writeFile(filePath, text, 'utf8');
+        console.log('--debug did write');
 
         // update file path & mark editor not dirty
         this.filePath = filePath;
@@ -145,7 +175,15 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
     }
 
 
-    // events ----------------------------------------------------------------------------------------------------------
+    // file events -----------------------------------------------------------------------------------------------------
+
+    private _diskFile_onChange = (eventType: string, fileName: string): void => {
+        const isFocused = this.browserWindow.isFocused();
+        console.log('--debug file event', {eventType, fileName, isFocused});
+    };
+
+
+    // ui events -------------------------------------------------------------------------------------------------------
 
     private _ipc_onSave = (): void => {
         this._save();
