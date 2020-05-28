@@ -15,6 +15,7 @@ import {
     remote,
     BrowserWindow,
 }                     from 'electron';
+import chokidar       from 'chokidar';
 
 import IpcListener    from '../../components/utility/IpcListener';
 import Editor         from '../../components/editor/Editor';
@@ -42,7 +43,7 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
     private _fileName?:         string;
     private _filePath?:         string;
 
-    private _diskFileWatcher?:  fs.FSWatcher;
+    private _diskFileWatcher?:  chokidar.FSWatcher;
 
 
     // accessors -------------------------------------------------------------------------------------------------------
@@ -84,7 +85,8 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
 
         // start listening to changes on new file
         if (value) {
-            this._diskFileWatcher = fs.watch(value, this._diskFile_onChange);
+            this._diskFileWatcher = chokidar.watch(value)
+                .on('all', this._diskFile_onChange);
         }
 
         // update represented file
@@ -165,9 +167,7 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
 
         // save file
         const text = this._editorRef.current?.getText() ?? '';
-        console.log('--debug will write');
         await writeFile(filePath, text, 'utf8');
-        console.log('--debug did write');
 
         // update file path & mark editor not dirty
         this.filePath = filePath;
@@ -177,9 +177,23 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
 
     // file events -----------------------------------------------------------------------------------------------------
 
-    private _diskFile_onChange = (eventType: string, fileName: string): void => {
-        const isFocused = this.browserWindow.isFocused();
-        console.log('--debug file event', {eventType, fileName, isFocused});
+    private _diskFile_onChange = (eventType: string): void => {
+        console.log('--debug disk file change', eventType);
+
+        // don't reload unless file added or changed externally
+        if (eventType !== 'add' && eventType !== 'change') {
+            return;
+        }
+
+        // don't reload if we are focussed. this could be our own save event
+        // also not if document is edited
+        const win = this.browserWindow;
+        if (win.isFocused() || win.isDocumentEdited()) {
+            return;
+        }
+
+        // reload contents
+        this._load();
     };
 
 
