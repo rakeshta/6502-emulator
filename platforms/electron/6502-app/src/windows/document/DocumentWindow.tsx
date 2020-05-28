@@ -20,6 +20,7 @@ import chokidar       from 'chokidar';
 import IpcListener    from '../../components/utility/IpcListener';
 import Editor         from '../../components/editor/Editor';
 
+import logger         from '../../utils/logger';
 import config         from '../../config';
 
 import './DocumentWindow.scss';
@@ -27,6 +28,8 @@ import './DocumentWindow.scss';
 
 const readFile  = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
+
+const log = logger(__filename);
 
 
 // class DocumentWindow ------------------------------------------------------------------------------------------------
@@ -140,8 +143,10 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
         // load file if given
         const filePath = this.filePath;
         if (filePath) {
+            log.info('Loading file', filePath);
             const contents = await readFile(filePath, 'utf8');
             this._editorRef.current?.setText(contents);
+            log.verbose('Loading complete', filePath);
         }
     }
 
@@ -177,8 +182,8 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
 
     // file events -----------------------------------------------------------------------------------------------------
 
-    private _diskFile_onChange = (eventType: string): void => {
-        console.log('--debug disk file change', eventType);
+    private _diskFile_onChange = (eventType: string, filePath: string): void => {
+        log.verbose('File changed on disk', eventType, filePath);
 
         // don't reload unless file added or changed externally
         if (eventType !== 'add' && eventType !== 'change') {

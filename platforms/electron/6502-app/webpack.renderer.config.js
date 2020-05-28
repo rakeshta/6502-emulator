@@ -16,6 +16,10 @@ const { toSass }                 = require('./src/styles/theme');
 
 module.exports = {
     devtool: 'source-map',
+    node: {
+        __filename: true,
+        __dirname:  true,
+    },
     module: {
         rules: rules.concat([
             {
