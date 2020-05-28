@@ -6,22 +6,24 @@
 //  Copyright (c) 2020 Raptor Soft. All rights reserved.
 //
 
-import React          from 'react';
+import React                 from 'react';
 
-import fs             from 'fs';
-import path           from 'path';
-import { promisify }  from 'util';
+import fs                    from 'fs';
+import path                  from 'path';
+import { promisify }         from 'util';
 import {
     remote,
     BrowserWindow,
-}                     from 'electron';
-import chokidar       from 'chokidar';
+}                            from 'electron';
+import chokidar              from 'chokidar';
 
-import IpcListener    from '../../components/utility/IpcListener';
-import Editor         from '../../components/editor/Editor';
+import IpcListener           from '../../components/utility/IpcListener';
+import ThemeChangeListener   from '../../components/utility/ThemeChangeListener';
+import Editor                from '../../components/editor/Editor';
+import { EditorThemeName }   from '../../components/editor/editorThemes';
 
-import logger         from '../../utils/logger';
-import config         from '../../config';
+import logger                from '../../utils/logger';
+import config                from '../../config';
 
 import './DocumentWindow.scss';
 
@@ -39,7 +41,15 @@ export interface Props {
     newFileName?: string;
 }
 
-export default class DocumentWindow extends React.PureComponent<Props, {}> {
+interface State {
+    editorTheme:  EditorThemeName;
+}
+
+export default class DocumentWindow extends React.PureComponent<Props, State> {
+
+    public state: State       = {
+        editorTheme: remote.nativeTheme.shouldUseDarkColors ? '6502-dark' : '6502-light',
+    };
 
     private _editorRef        = React.createRef<Editor>();
 
@@ -208,6 +218,12 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
         this._save();
     };
 
+    private _nativeTheme_onChange = (nativeTheme: Electron.NativeTheme): void => {
+        const editorTheme: EditorThemeName = nativeTheme.shouldUseDarkColors ? '6502-dark' : '6502-light';
+        log.info('Changing editor theme to', editorTheme);
+        this.setState({editorTheme});
+    };
+
     private _editor_onChange = (): void => {
         this.isEdited = true;
     };
@@ -216,10 +232,12 @@ export default class DocumentWindow extends React.PureComponent<Props, {}> {
     // render ----------------------------------------------------------------------------------------------------------
 
     public render(): React.ReactNode {
+        const {editorTheme} = this.state;
         return (
             <div className='window document'>
                 <IpcListener channel='menu.save' listener={this._ipc_onSave}/>
-                <Editor ref={this._editorRef} className='editor' onChange={this._editor_onChange}/>
+                <ThemeChangeListener onChange={this._nativeTheme_onChange}/>
+                <Editor ref={this._editorRef} className='editor' theme={editorTheme} onChange={this._editor_onChange}/>
             </div>
         );
     }

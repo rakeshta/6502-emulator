@@ -6,9 +6,15 @@
 //  Copyright (c) 2020 Raptor Soft. All rights reserved.
 //
 
-import React        from 'react';
-import * as monaco  from 'monaco-editor';
-import classes      from 'classnames';
+import React          from 'react';
+import * as monaco    from 'monaco-editor';
+
+import classes        from 'classnames';
+import isEqual        from 'lodash/isEqual';
+
+import editorThemes, {
+    EditorThemeName,
+}                     from './editorThemes';
 
 
 // types ---------------------------------------------------------------------------------------------------------------
@@ -19,14 +25,23 @@ type IStandaloneCodeEditor     = monaco.editor.IStandaloneCodeEditor;
 type IModelContentChangedEvent = monaco.editor.IModelContentChangedEvent;
 
 
+// monaco setup --------------------------------------------------------------------------------------------------------
+
+// custom themes
+Object.entries(editorThemes).forEach(([name, theme]) => monaco.editor.defineTheme(name, theme));
+
+const DEFAULT_THEME: EditorThemeName = '6502-light';
+
+
 // class Editor --------------------------------------------------------------------------------------------------------
 
 export interface Props {
     className?:  string;
+    theme?:      EditorThemeName;
     onChange?:  () => void;
 }
 
-export default class Editor extends React.PureComponent<Props> {
+export default class Editor extends React.Component<Props> {
 
     private _containerRef         = React.createRef<HTMLDivElement>();
 
@@ -60,7 +75,7 @@ export default class Editor extends React.PureComponent<Props> {
         this._editor = monaco.editor.create(container, {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             model:                 this._model!,
-            theme:                'custom',
+            theme:                 this.props.theme ?? DEFAULT_THEME,
             scrollBeyondLastLine:  false,
         });
 
@@ -68,10 +83,9 @@ export default class Editor extends React.PureComponent<Props> {
         this._didChangeListener = this._model?.onDidChangeContent(this._model_onDidChangeContent);
 
         // add some space above the first line
-        // magic code copied from: https://github.com/Microsoft/monaco-editor/issues/1333
         this._editor?.changeViewZones((accessor) => accessor.addZone({
             afterLineNumber: 0,
-            heightInLines:   0.5,
+            heightInLines:   0.2,
             domNode:         document.createElement('div'),
         }));
 
@@ -87,6 +101,22 @@ export default class Editor extends React.PureComponent<Props> {
         // dispose editor & model
         if (this._editor) { this._editor.dispose(); this._model  = undefined; }
         if (this._model)  { this._model.dispose();  this._model  = undefined; }
+    }
+
+
+    // update hooks ----------------------------------------------------------------------------------------------------
+
+    public shouldComponentUpdate(nextProps: Props): boolean {
+
+        // update theme
+        if (!isEqual(this.props.theme, nextProps.theme)) {
+            // FIXME: theme seems to be a global setting in monaco. we should mirror this.
+            monaco.editor.setTheme(nextProps.theme ?? DEFAULT_THEME);
+        }
+
+
+        // react-update only when class name changes
+        return !isEqual(this.props.className, nextProps.className);
     }
 
 
