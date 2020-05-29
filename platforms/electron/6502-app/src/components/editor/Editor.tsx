@@ -12,9 +12,9 @@ import * as monaco    from 'monaco-editor';
 import classes        from 'classnames';
 import isEqual        from 'lodash/isEqual';
 
-import editorThemes, {
+import EditorThemes, {
     EditorThemeName,
-}                     from './editorThemes';
+}                     from './EditorThemes';
 
 
 // types ---------------------------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ type IModelContentChangedEvent = monaco.editor.IModelContentChangedEvent;
 // monaco setup --------------------------------------------------------------------------------------------------------
 
 // custom themes
-Object.entries(editorThemes).forEach(([name, theme]) => monaco.editor.defineTheme(name, theme));
+Object.entries(EditorThemes).forEach(([name, theme]) => monaco.editor.defineTheme(name, theme));
 
 const DEFAULT_THEME: EditorThemeName = '6502-light';
 

@@ -1,5 +1,5 @@
 //
-//  editorThemes.ts
+//  EditorThemes.ts
 //  6502-emulator
 //
 //  Created by Rakesh Ayyaswami on 28 May 2020.
@@ -15,7 +15,7 @@ type BuiltinTheme         = monaco.editor.BuiltinTheme;
 type AppTheme             = typeof light | typeof dark;
 
 
-function _themeFrom(base: BuiltinTheme, theme: AppTheme): monaco.editor.IStandaloneThemeData {
+function _themeFrom(base: BuiltinTheme, theme: AppTheme): IStandaloneThemeData {
     return {
         base,
         inherit:  true,
@@ -30,10 +30,10 @@ function _themeFrom(base: BuiltinTheme, theme: AppTheme): monaco.editor.IStandal
 }
 
 
-const editorThemes = {
+const EditorThemes = {
     '6502-light': _themeFrom('vs',      light),
     '6502-dark':  _themeFrom('vs-dark', dark),
 };
-export default editorThemes;
+export default EditorThemes;
 
-export type EditorThemeName = keyof typeof editorThemes;
+export type EditorThemeName = keyof typeof EditorThemes;

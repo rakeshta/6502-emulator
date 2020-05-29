@@ -20,7 +20,7 @@ import chokidar              from 'chokidar';
 import IpcListener           from '../../components/utility/IpcListener';
 import ThemeChangeListener   from '../../components/utility/ThemeChangeListener';
 import Editor                from '../../components/editor/Editor';
-import { EditorThemeName }   from '../../components/editor/editorThemes';
+import { EditorThemeName }   from '../../components/editor/EditorThemes';
 
 import logger                from '../../utils/logger';
 import config                from '../../config';
