@@ -12,6 +12,7 @@ import * as monaco    from 'monaco-editor';
 import classes        from 'classnames';
 import isEqual        from 'lodash/isEqual';
 
+import Asm6502        from './EditorLangAsm6502';
 import EditorThemes, {
     EditorThemeName,
 }                     from './EditorThemes';
@@ -31,6 +32,9 @@ type IModelContentChangedEvent = monaco.editor.IModelContentChangedEvent;
 Object.entries(EditorThemes).forEach(([name, theme]) => monaco.editor.defineTheme(name, theme));
 
 const DEFAULT_THEME: EditorThemeName = '6502-light';
+
+// register lang
+Asm6502.register();
 
 
 // class Editor --------------------------------------------------------------------------------------------------------
@@ -71,7 +75,7 @@ export default class Editor extends React.Component<Props> {
         window.addEventListener('resize', this._onWindowResize);
 
         // mount editor
-        this._model  = monaco.editor.createModel('');
+        this._model  = monaco.editor.createModel('', Asm6502.id);
         this._editor = monaco.editor.create(container, {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             model:                 this._model!,
