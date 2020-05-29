@@ -17,6 +17,8 @@ import EditorThemes, {
     EditorThemeName,
 }                     from './EditorThemes';
 
+import theme          from '../../styles/theme';
+
 
 // types ---------------------------------------------------------------------------------------------------------------
 
@@ -81,6 +83,9 @@ export default class Editor extends React.Component<Props> {
             model:                 this._model!,
             theme:                 this.props.theme ?? DEFAULT_THEME,
             scrollBeyondLastLine:  false,
+            fontFamily:            theme.style.editor.fontFamily,
+            fontWeight:            theme.style.editor.fontWeight,
+            fontSize:              theme.style.editor.fontSize,
         });
 
         // register for change events
