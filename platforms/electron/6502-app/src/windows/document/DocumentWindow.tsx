@@ -161,7 +161,7 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
         }
     }
 
-    private async _save(): Promise<void> {
+    private async _save(): Promise<boolean> {
 
         // show save dialog if no file path
         let filePath = this.filePath;
@@ -174,7 +174,7 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
                 properties: ['createDirectory', 'showOverwriteConfirmation'],
             });
             if (!res.filePath) {
-                return;
+                return false;
             }
 
             // continue with file path
@@ -188,6 +188,9 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
         // update file path & mark editor not dirty
         this.filePath = filePath;
         this.isEdited = false;
+
+        // saved successfully
+        return true;
     }
 
 
@@ -219,6 +222,14 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
         this._save();
     };
 
+    private _saveBeforeClose_getFileName = (): string | undefined => this.fileName;
+    private _saveBeforeClose_onSave      = async (close: () => void): Promise<void> => {
+        const saved = await this._save();
+        if (saved) {
+            close();
+        }
+    };
+
     private _nativeTheme_onChange = (nativeTheme: Electron.NativeTheme): void => {
         const editorTheme: EditorThemeName = nativeTheme.shouldUseDarkColors ? '6502-dark' : '6502-light';
         log.info('Changing editor theme to', editorTheme);
@@ -235,12 +246,14 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
     public render(): React.ReactNode {
         const {editorTheme} = this.state;
         return (
+            /* eslint-disable max-len */
             <div className='window document'>
                 <IpcListener channel='menu.save' listener={this._ipc_onSave}/>
                 <ThemeChangeListener onChange={this._nativeTheme_onChange}/>
-                <SaveBeforeCloseAlert/>
+                <SaveBeforeCloseAlert fileName={this._saveBeforeClose_getFileName} onSave={this._saveBeforeClose_onSave}/>
                 <Editor ref={this._editorRef} className='editor' theme={editorTheme} onChange={this._editor_onChange}/>
             </div>
+            /* eslint-enable max-len */
         );
     }
 }

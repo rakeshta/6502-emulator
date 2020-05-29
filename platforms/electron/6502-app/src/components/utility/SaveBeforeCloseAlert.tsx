@@ -12,9 +12,18 @@ import {
     BrowserWindow,
 }               from 'electron';
 
+import logger   from '../../utils/logger';
 
 
-export default class SaveBeforeCloseAlert extends React.Component {
+const log = logger(__filename);
+
+
+export interface Props {
+    fileName?:   string | (() => string | undefined);
+    onSave?:    (competion: () => void) => unknown;
+}
+
+export default class SaveBeforeCloseAlert extends React.Component<Props> {
 
     // accessors -------------------------------------------------------------------------------------------------------
 
@@ -36,11 +45,19 @@ export default class SaveBeforeCloseAlert extends React.Component {
         super.componentWillUnmount?.();
 
         // unhook before unload listener
-        window.removeEventListener('beforeunload', this._onBeforeUnload);
+        // window.removeEventListener('beforeunload', this._onBeforeUnload);
     }
 
     public shouldComponentUpdate(): boolean {
         return false;
+    }
+
+
+    // helpers ---------------------------------------------------------------------------------------------------------
+
+    private _closeBrowserWindow(): void {
+        window.removeEventListener('beforeunload', this._onBeforeUnload);
+        this.browserWindow.close();
     }
 
 
@@ -54,19 +71,41 @@ export default class SaveBeforeCloseAlert extends React.Component {
             return;
         }
 
+        // error out if file name cannot be detrmined or if save callback not provided
+        const {fileName, onSave} = this.props;
+        const fileNameU = typeof fileName === 'function' ? fileName() : fileName;
+        if (!fileNameU || !onSave) {
+            log.error('Unable to determine current file name or save callback not provided. Aborting.');
+            return;
+        }
+
         // prevent unload
-        console.log('--debug before unload');
         event.returnValue = false;
 
         // show alert to confirm user choice
         const res = await remote.dialog.showMessageBox(win, {
             type:     'warning',
-            buttons: ['Save', 'Cancel', 'Don\'t Save'],
+            buttons: ['&Save', '&Cancel', '&Don\'t Save'],
             cancelId:  1,
-            message:  'Do you wish to save the changes you made to the document \'DOCUMENT NAME HERE\'?',
+            message:  `Do you want to save the changes you made to ${fileNameU}?`,
             detail:   'Your changes will be lost if you don\'t save them.',
+            normalizeAccessKeys: true,
         });
-        console.log('--debug res', res);
+
+        switch (res.response) {
+            // save
+            case 0: // save
+                onSave(() => this._closeBrowserWindow());
+                break;
+
+            case 1: // cancel
+            default:
+                break;
+
+            case 2: // don't save
+                this._closeBrowserWindow();
+                break;
+        }
     };
 
 
