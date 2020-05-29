@@ -19,6 +19,7 @@ import chokidar              from 'chokidar';
 
 import IpcListener           from '../../components/utility/IpcListener';
 import ThemeChangeListener   from '../../components/utility/ThemeChangeListener';
+import SaveBeforeCloseAlert  from '../../components/utility/SaveBeforeCloseAlert';
 import Editor                from '../../components/editor/Editor';
 import { EditorThemeName }   from '../../components/editor/EditorThemes';
 
@@ -237,6 +238,7 @@ export default class DocumentWindow extends React.PureComponent<Props, State> {
             <div className='window document'>
                 <IpcListener channel='menu.save' listener={this._ipc_onSave}/>
                 <ThemeChangeListener onChange={this._nativeTheme_onChange}/>
+                <SaveBeforeCloseAlert/>
                 <Editor ref={this._editorRef} className='editor' theme={editorTheme} onChange={this._editor_onChange}/>
             </div>
         );
