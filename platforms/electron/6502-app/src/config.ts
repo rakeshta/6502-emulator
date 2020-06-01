@@ -10,10 +10,10 @@
 // file format ---------------------------------------------------------------------------------------------------------
 
 const file = {
-    defaultExtension: '65s',
+    defaultExtension: 'a65',
     filters:          [
-        {name: '6502 Assembly Language File',  extensions: ['65s', '6502s']},
-        {name: 'Other Assembly Language File', extensions: ['asm', 's']},
+        {name: '6502 Assembly Language File',  extensions: ['a65', 'a6502', '65s', '6502s']},
+        {name: 'Other Assembly Language File', extensions: ['asm', 'a65C', 'a65C02', 's']},
         {name: 'All Files',                    extensions: ['*']},
     ],
 };
