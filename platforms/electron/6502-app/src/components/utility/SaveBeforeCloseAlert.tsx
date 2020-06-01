@@ -20,7 +20,7 @@ const log = logger(__filename);
 
 export interface Props {
     fileName?:   string | (() => string | undefined);
-    onSave?:    (competion: () => void) => unknown;
+    onSave?:    (completion: () => void) => unknown;
 }
 
 export default class SaveBeforeCloseAlert extends React.Component<Props> {
@@ -71,7 +71,7 @@ export default class SaveBeforeCloseAlert extends React.Component<Props> {
             return;
         }
 
-        // error out if file name cannot be detrmined or if save callback not provided
+        // error out if file name cannot be determined or if save callback not provided
         const {fileName, onSave} = this.props;
         const fileNameU = typeof fileName === 'function' ? fileName() : fileName;
         if (!fileNameU || !onSave) {
