@@ -9,10 +9,17 @@
 import * as monaco    from 'monaco-editor';
 
 
-import IMonarchLanguage = monaco.languages.IMonarchLanguage;
+import IMonarchLanguage       = monaco.languages.IMonarchLanguage;
+import CompletionItemProvider = monaco.languages.CompletionItemProvider;
+import CompletionList         = monaco.languages.CompletionList;
+import CompletionItem         = monaco.languages.CompletionItem;
 
 
 // types ---------------------------------------------------------------------------------------------------------------
+
+interface Instruction {
+    [mnemonic: string]: string;
+}
 
 interface Asm6502MonarchLanguage extends IMonarchLanguage {
     id:              string;
@@ -22,6 +29,92 @@ interface Asm6502MonarchLanguage extends IMonarchLanguage {
     instructions:    string[];
     exInstructions:  string[];
 }
+
+
+// lang ----------------------------------------------------------------------------------------------------------------
+
+const instructions: Instruction[] = [
+    {ADC: 'Add with carry'},
+    {AND: 'And (with accumulator)'},
+    {ASL: 'Arithmetic shift left'},
+    {BCC: 'Branch on carry clear'},
+    {BCS: 'Branch on carry set'},
+    {BEQ: 'Branch on equal (zero set)'},
+    {BIT: 'Bit test'},
+    {BMI: 'Branch on minus (negative set)'},
+    {BNE: 'Branch on not equal (zero clear)'},
+    {BPL: 'Branch on plus (negative clear)'},
+    {BRK: 'Break / interrupt'},
+    {BVC: 'Branch on overflow clear'},
+    {BVS: 'Branch on overflow set'},
+    {CLC: 'Clear carry'},
+    {CLD: 'Clear decimal'},
+    {CLI: 'Clear interrupt disable'},
+    {CLV: 'Clear overflow'},
+    {CMP: 'Compare (with accumulator)'},
+    {CPX: 'Compare with X'},
+    {CPY: 'Compare with Y'},
+    {DEC: 'Decrement'},
+    {DEX: 'Decrement X'},
+    {DEY: 'Decrement Y'},
+    {EOR: 'Exclusive or (with accumulator)'},
+    {INC: 'Increment'},
+    {INX: 'Increment X'},
+    {INY: 'Increment Y'},
+    {JMP: 'Jump'},
+    {JSR: 'Jump subroutine'},
+    {LDA: 'Load accumulator'},
+    {LDX: 'Load X'},
+    {LDY: 'Load Y'},
+    {LSR: 'Logical shift right'},
+    {NOP: 'No operation'},
+    {ORA: 'Or with accumulator'},
+    {PHA: 'Push accumulator'},
+    {PHP: 'Push processor status (SR)'},
+    {PLA: 'Pull accumulator'},
+    {PLP: 'Pull processor status (SR)'},
+    {ROL: 'Rotate left'},
+    {ROR: 'Rotate right'},
+    {RTI: 'Return from interrupt'},
+    {RTS: 'Return from subroutine'},
+    {SBC: 'Subtract with carry'},
+    {SEC: 'Set carry'},
+    {SED: 'Set decimal'},
+    {SEI: 'Set interrupt disable'},
+    {STA: 'Store accumulator'},
+    {STX: 'Store X'},
+    {STY: 'Store Y'},
+    {TAX: 'Transfer accumulator to X'},
+    {TAY: 'Transfer accumulator to Y'},
+    {TSX: 'Transfer stack pointer to X'},
+    {TXA: 'Transfer X to accumulator'},
+    {TXS: 'Transfer X to stack pointer'},
+    {TYA: 'Transfer Y to accumulator'},
+];
+
+const exInstructions: Instruction[] = [
+    {KIL: 'Crashes the microprocessor. Produces unexpected results'},
+    {SLO: 'Arithmetic shift left + or with accumulator'},
+    {RLA: 'rotate left + and (with accumulator)'},
+    {SRE: 'logical shift right + exclusive or (with accumulator)'},
+    {RRA: 'rotate right + add with carry'},
+    {SAX: 'and accumulator with X + subtract immediate into X'},
+    {LAX: 'load accumulator & X'},
+    {DCP: 'decrement + compare (with accumulator)'},
+    {DCM: 'decrement + compare (with accumulator)'},
+    {ISC: 'increment + subtract with carry'},
+    {INS: 'increment + subtract with carry'},
+    {ANC: 'and (with accumulator) + set carry if negative'},
+    {ALR: 'and (with accumulator) + logical shift right'},
+    {ARR: 'and (with accumulator) + rotate right'},
+    {XAA: 'transfer X to accumulator + and (with accumulator) '},
+    {AXS: 'and X with accumulator into memory'},
+    {OAL: 'or with accumulator $EE + and immediate + load accumulator & X'},
+    {TAS: 'and accumulator and X into stack pointer + and with high-byte of address then store at address'},
+    {SAY: 'and Y with high-byte + 1 of address then store at address'},
+    {XAS: 'and X with high-byte + 1 of address then store at address'},
+    {AXA: 'and X with accumulator & high-byte + 1 of address then store at address'},
+];
 
 
 // definition ----------------------------------------------------------------------------------------------------------
@@ -54,17 +147,8 @@ const lang: Asm6502MonarchLanguage = {
         ',y',
     ],
 
-    instructions: [
-        'ADC', 'AND', 'ASL', 'BCC', 'BCS', 'BEQ', 'BIT', 'BMI', 'BNE', 'BPL', 'BRK', 'BVC', 'BVS', 'CLC', 'CLD', 'CLI',
-        'CLV', 'CMP', 'CPX', 'CPY', 'DEC', 'DEX', 'DEY', 'EOR', 'INC', 'INX', 'INY', 'JMP', 'JSR', 'LDA', 'LDX', 'LDY',
-        'LSR', 'NOP', 'ORA', 'PHA', 'PHP', 'PLA', 'PLP', 'ROL', 'ROR', 'RTI', 'RTS', 'SBC', 'SEC', 'SED', 'SEI', 'STA',
-        'STX', 'STY', 'TAX', 'TAY', 'TSX', 'TXA', 'TXS', 'TYA',
-    ],
-
-    exInstructions: [
-        'KIL', 'SLO', 'RLA', 'SRE', 'RRA', 'SAX', 'LAX', 'DCP', 'ISC', 'ANC', 'ALR', 'ARR', 'XAA', 'AXS', 'AHX', 'SHY',
-        'SHX', 'TAS', 'LAS',
-    ],
+    instructions:   instructions.map((i) => Object.keys(i)[0]),
+    exInstructions: exInstructions.map((i) => Object.keys(i)[0]),
 
     tokenizer: {
 
@@ -117,6 +201,33 @@ const lang: Asm6502MonarchLanguage = {
 };
 
 
+// completion provider -------------------------------------------------------------------------------------------------
+
+const Kind = monaco.languages.CompletionItemKind;
+
+const suggestions: CompletionItem[] = [
+    ...instructions.map((inst): CompletionItem => {
+        const mnemonic = Object.keys(inst)[0];
+        const desc     = inst[mnemonic];
+        return {
+            label:          mnemonic,
+            kind:           Kind.Enum,
+            insertText:     mnemonic,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            range:         (undefined as any),
+            detail:         desc,
+            documentation: {value: desc},
+        };
+    }),
+];
+
+const completion: CompletionItemProvider = {
+    provideCompletionItems(): CompletionList {
+        return {suggestions};
+    },
+};
+
+
 // export --------------------------------------------------------------------------------------------------------------
 
 export default {
@@ -126,5 +237,6 @@ export default {
     register(): void {
         monaco.languages.register({id: lang.id});
         monaco.languages.setMonarchTokensProvider(lang.id, lang);
+        monaco.languages.registerCompletionItemProvider(lang.id, completion);
     },
 };
