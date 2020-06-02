@@ -211,7 +211,7 @@ const suggestions: CompletionItem[] = [
         const desc     = inst[mnemonic];
         return {
             label:          mnemonic,
-            kind:           Kind.Enum,
+            kind:           Kind.Method,
             insertText:     mnemonic,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             range:         (undefined as any),
