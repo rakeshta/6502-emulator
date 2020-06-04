@@ -45,7 +45,7 @@ export default class SaveBeforeCloseAlert extends React.Component<Props> {
         super.componentWillUnmount?.();
 
         // unhook before unload listener
-        // window.removeEventListener('beforeunload', this._onBeforeUnload);
+        window.removeEventListener('beforeunload', this._onBeforeUnload);
     }
 
     public shouldComponentUpdate(): boolean {
