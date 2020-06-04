@@ -9,16 +9,22 @@
 import * as monaco    from 'monaco-editor';
 
 
-import IMonarchLanguage       = monaco.languages.IMonarchLanguage;
-import CompletionItemProvider = monaco.languages.CompletionItemProvider;
-import CompletionList         = monaco.languages.CompletionList;
-import CompletionItem         = monaco.languages.CompletionItem;
+import IMonarchLanguage             = monaco.languages.IMonarchLanguage;
+import CompletionItemProvider       = monaco.languages.CompletionItemProvider;
+import CompletionList               = monaco.languages.CompletionList;
+import CompletionItem               = monaco.languages.CompletionItem;
+import CompletionItemInsertTextRule = monaco.languages.CompletionItemInsertTextRule;
 
 
 // types ---------------------------------------------------------------------------------------------------------------
 
 interface Instruction {
     [mnemonic: string]: string;
+}
+
+interface Snippet {
+    label:    string;
+    text:     string;
 }
 
 interface Asm6502MonarchLanguage extends IMonarchLanguage {
@@ -116,6 +122,22 @@ const exInstructions: Instruction[] = [
     {AXA: 'and X with accumulator & high-byte + 1 of address then store at address'},
 ];
 
+const snippets: Snippet[] = [
+
+    // addressing
+    {label: 'Addressing: Absolute',            text: '$${1:0000}'},
+    {label: 'Addressing: Absolute, X-indexed', text: '$${1:0000},X'},
+    {label: 'Addressing: Absolute, Y-indexed', text: '$${1:0000},Y'},
+    {label: 'Addressing: Immediate',           text: '#${1:$00}'},
+    {label: 'Addressing: Indirect',            text: '$(${1:0000})'},
+    {label: 'Addressing: X-indexed, Indirect', text: '$(${1:00},X)'},
+    {label: 'Addressing: Indirect, Y-indexed', text: '$(${1:00}),Y'},
+    {label: 'Addressing: Relative',            text: '$${1:00}'},
+    {label: 'Addressing: Zeropage',            text: '$${1:00}'},
+    {label: 'Addressing: Zeropage, X-indexed', text: '$${1:00},X'},
+    {label: 'Addressing: Zeropage, Y-indexed', text: '$${1:00},Y'},
+];
+
 
 // definition ----------------------------------------------------------------------------------------------------------
 
@@ -206,6 +228,8 @@ const lang: Asm6502MonarchLanguage = {
 const Kind = monaco.languages.CompletionItemKind;
 
 const suggestions: CompletionItem[] = [
+
+    // instructions
     ...instructions.map((inst): CompletionItem => {
         const mnemonic = Object.keys(inst)[0];
         const desc     = inst[mnemonic];
@@ -219,6 +243,16 @@ const suggestions: CompletionItem[] = [
             documentation: {value: desc},
         };
     }),
+
+    // snippets
+    ...snippets.map((snip): CompletionItem => ({
+        label:            snip.label,
+        kind:             Kind.Snippet,
+        insertText:       snip.text,
+        insertTextRules:  CompletionItemInsertTextRule.InsertAsSnippet,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        range:           (undefined as any),
+})),
 ];
 
 const completion: CompletionItemProvider = {
