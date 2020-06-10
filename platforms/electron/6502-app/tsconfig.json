@@ -7,7 +7,7 @@
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
-        "isolatedModules": true,
+        // "isolatedModules": true,
         "jsx": "react",
         "noImplicitAny": true,
         "noImplicitReturns": true,
@@ -18,6 +18,8 @@
         "sourceMap": true,
         "strict": true,
         "strictNullChecks": true,
+
+        "lib": ["WebWorker", "ScriptHost"],
 
         "baseUrl": ".",
         "outDir": "dist",
