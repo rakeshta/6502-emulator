@@ -9,8 +9,7 @@
 import React            from 'react';
 import * as monaco      from 'monaco-editor';
 
-import dasm             from 'dasm';
-import hexy             from 'hexy';
+// import hexy             from 'hexy';
 import classes          from 'classnames';
 import isEqual          from 'lodash/isEqual';
 import throttle         from 'lodash/throttle';
@@ -20,7 +19,7 @@ import EditorThemes, {
     EditorThemeName,
 }                       from './EditorThemes';
 
-import AssemblerWorker  from 'worker-loader!../../models/assembler.worker';
+import assembler        from '../../models/assembler/assembler';
 
 import theme            from '../../styles/theme';
 
@@ -63,8 +62,6 @@ export default class Editor extends React.Component<Props> {
 
     private _containerWidthDelta  = 0;
     private _containerHeightDelta = 0;
-
-    private _assembler            = new AssemblerWorker();
 
 
     // lifecycle -------------------------------------------------------------------------------------------------------
@@ -156,26 +153,9 @@ export default class Editor extends React.Component<Props> {
 
     // assemble --------------------------------------------------------------------------------------------------------
 
-    private _assemble(code: string): void {
-
-        console.log('--debug assembling');
-        const start = Date.now();
-        const res   = dasm(code, {
-            format: 2,
-        });
-        console.group('--debug assembled in ', (Date.now() - start) / 1000.0 + 's');
-        console.log(res);
-        if (res.success) {
-            console.log('--data:');
-            console.log(hexy.hexy(Buffer.from(res.data), {
-                width:   8,
-                format: 'twos',
-                caps:   'upper',
-            }));
-        }
-        console.groupEnd();
-
-        this._assembler.postMessage('hello worker!');
+    private async _assemble(versionId: number, code: string): Promise<void> {
+        const res = await assembler.assemble({versionId, value: code});
+        console.log('--debug assemble result', res);
     }
 
     private _assembleThrottled = throttle(this._assemble, 1000);
@@ -197,8 +177,9 @@ export default class Editor extends React.Component<Props> {
     private _model_onDidChangeContent = (): void => {
         this.props.onChange?.();
 
-        const value = this._model?.getValue() || '';
-        this._assembleThrottled(value);
+        const versionId = this._model?.getVersionId() || -1;
+        const value     = this._model?.getValue()     || '';
+        this._assembleThrottled(versionId, value);
     };
 
 

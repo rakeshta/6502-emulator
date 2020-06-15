@@ -41,11 +41,12 @@ function _createAndShowWindow(
 
     // create window
     const win = new BrowserWindow({
-        show:                   false,
+        show:                         false,
         webPreferences:       {
-            enableRemoteModule: true,
-            nodeIntegration:    true,
-            devTools:           isDev,
+            enableRemoteModule:       true,
+            nodeIntegration:          true,
+            nodeIntegrationInWorker:  true,
+            devTools:                 isDev,
         },
         ...rest,
         ...windowState,
