@@ -30,6 +30,9 @@ type IDisposable               = monaco.IDisposable;
 type ITextModel                = monaco.editor.ITextModel;
 type IStandaloneCodeEditor     = monaco.editor.IStandaloneCodeEditor;
 type IModelContentChangedEvent = monaco.editor.IModelContentChangedEvent;
+type IMarkerData               = monaco.editor.IMarkerData;
+
+const MarkerSeverity           = monaco.MarkerSeverity;
 
 
 // monaco setup --------------------------------------------------------------------------------------------------------
@@ -154,8 +157,26 @@ export default class Editor extends React.Component<Props> {
     // assemble --------------------------------------------------------------------------------------------------------
 
     private async _assemble(versionId: number, code: string): Promise<void> {
+
+        // assemble (happens in worker thread). abort if version has moved on.
         const res = await assembler.assemble({versionId, value: code});
         console.log('--debug assemble result', res);
+        if (this.getVersionId() !== versionId) {
+            return;
+        }
+
+        // show errors
+        const markers = res.messages.map((m): IMarkerData => ({
+            severity:        m.type === 'error' ? MarkerSeverity.Error : MarkerSeverity.Info,
+            startLineNumber: m.lineNumber,
+            startColumn:     1,
+            endLineNumber:   m.lineNumber + 1,
+            endColumn:       1,
+            message:         m.text,
+        }));
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        monaco.editor.setModelMarkers(this._model!, 'foo', markers);
     }
 
     private _assembleThrottled = throttle(this._assemble, 1000);
@@ -176,10 +197,7 @@ export default class Editor extends React.Component<Props> {
 
     private _model_onDidChangeContent = (): void => {
         this.props.onChange?.();
-
-        const versionId = this._model?.getVersionId() || -1;
-        const value     = this._model?.getValue()     || '';
-        this._assembleThrottled(versionId, value);
+        this._assembleThrottled(this.getVersionId(), this.getText());
     };
 
 
