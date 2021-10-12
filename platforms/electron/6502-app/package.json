@@ -91,7 +91,7 @@
         "classnames": "^2.2.6",
         "css-loader": "^3.5.3",
         "dasm": "^6.0.1",
-        "electron": "9.0.0",
+        "electron": "11.5.0",
         "electron-context-menu": "^2.0.0",
         "electron-devtools-installer": "^3.0.0",
         "electron-is-dev": "^1.2.0",
